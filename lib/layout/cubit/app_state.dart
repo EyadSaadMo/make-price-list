@@ -3,6 +3,7 @@ abstract class AppState {}
 
 class AppInitialState extends AppState {}
 class AppChangeBottomNavState extends AppState {}
+class AppChangeThemeModeState extends AppState {}
 
 
 class AppCreatedDatabaseState extends AppState {}

@@ -1,38 +1,59 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:work/core/components/default_form_field/defaultt_form_field_component.dart';
-import 'package:work/core/components/routes/routes_screen.dart';
-import 'package:work/core/constatns/colors.dart';
+
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
-import 'package:work/layout/layout_screen.dart';
 import 'package:work/modules/qr_scan/scan_screen.dart';
 
+import '../../core/components/widgets/default_form_field/defaultt_form_field_component.dart';
+import '../../core/components/widgets/routes/routes_screen.dart';
 
-class AddingNewItemScreen extends StatelessWidget {
+
+class AddingNewItemScreen extends StatefulWidget {
   AddingNewItemScreen({Key? key}) : super(key: key);
 
+  @override
+  State<AddingNewItemScreen> createState() => _AddingNewItemScreenState();
+}
+
+class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
+
   var formKey = GlobalKey<FormState>();
+
   var itemNameController = TextEditingController();
+
   var weightController = TextEditingController();
+
   var quantityController = TextEditingController();
+
   var costPriceController = TextEditingController();
+
   var salePriceController = TextEditingController();
+
   var descriptionController = TextEditingController();
+
   var codeController = TextEditingController();
-
-  chooseFromGallery() async {
-    var photo = await ImagePicker().getImage(source: ImageSource.gallery);
-    return photo;
+bool selectedPhoto = false;
+var oldPhoto = 'assets/images/checkList.jpg';
+var newPhoto= '';
+File? image;
+ Future pickImage(ImageSource source) async {
+   try{
+     final image = await ImagePicker().pickImage(source: source);
+     if(image==null) return;
+     final imageTemporary = File(image.path);
+     setState(() {
+       this.image = imageTemporary;
+     });
+   }on PlatformException catch(error){
+     print('Failed to pick image $error');
+   }
   }
-
-  takePhoto() async {
-    var image = await ImagePicker().getImage(source: ImageSource.camera);
-    return image;
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -43,28 +64,15 @@ class AddingNewItemScreen extends StatelessWidget {
           var cubit = AppCubit.get(context);
           return Scaffold(
             key: scaffoldKey,
-            backgroundColor: screenColor,
             appBar: AppBar(
-              backgroundColor: defaultColor,
-              iconTheme: IconThemeData(color: textColor),
               title: Text(
                 'Add New Item',
-                style: TextStyle(color: textColor),
-              ),
+                style: Theme.of(context).appBarTheme.titleTextStyle),
             ),
             body: ListView(
               children: [
                 GestureDetector(
-                  child: Container(
-                    width: double.infinity,
-                    height: 200,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/heart.png'),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
+                  child:image != null?Image.file(image!,height: 250,fit: BoxFit.cover,): Image.asset(oldPhoto),
                   onTap: () {
                     if (cubit.closedBottomSheet) {
                       Navigator.pop(context);
@@ -73,32 +81,34 @@ class AddingNewItemScreen extends StatelessWidget {
                       scaffoldKey.currentState!
                           .showBottomSheet((context) => Container(
                                 height: 200,
-                                color: screenColor,
+                                color:  Theme.of(context).bottomSheetTheme.backgroundColor,
                                 child: Column(
                                   children: [
                                     GestureDetector(
-                                      child: const ListTile(
-                                        leading: Icon(Icons.camera_alt),
-                                        title: Text('Take Photo'),
+                                      child:  ListTile(
+                                        leading: Icon(Icons.camera_alt_outlined,color:  Theme.of(context).iconTheme.color,),
+                                        title: Text('Take Photo',style: Theme.of(context).textTheme.bodyText1),
                                       ),
                                       onTap: () {
-                                        takePhoto();
+                                        pickImage(ImageSource.camera);
+                                        Navigator.pop(context);
                                       },
                                     ),
                                     GestureDetector(
-                                      child: const ListTile(
+                                      child:  ListTile(
                                         leading: Icon(
-                                            Icons.calendar_view_week_rounded),
-                                        title: Text('Choose from Gallery'),
+                                            Icons.image_outlined,color:  Theme.of(context).iconTheme.color),
+                                        title: Text('Choose from Gallery',style: Theme.of(context).textTheme.bodyText1),
                                       ),
                                       onTap: () {
-                                        chooseFromGallery();
+                                        pickImage(ImageSource.gallery);
+                                        Navigator.pop(context);
                                       },
                                     ),
                                     GestureDetector(
-                                      child: const ListTile(
-                                        leading: Icon(Icons.cancel_outlined),
-                                        title: Text('Cancel'),
+                                      child:  ListTile(
+                                        leading: Icon(Icons.cancel_outlined,color:  Theme.of(context).iconTheme.color),
+                                        title: Text('Cancel',style: Theme.of(context).textTheme.bodyText1),
                                       ),
                                       onTap: () {
                                         Navigator.pop(context);
@@ -126,10 +136,7 @@ class AddingNewItemScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 7),
                           child: Text(
                             'Category',
-                            style: TextStyle(
-                                color: textColor.withOpacity(0.4),
-                                fontSize: 14),
-                          ),
+                            style: Theme.of(context).textTheme.caption),
                         ),
                         const SizedBox(
                           height: 5,
@@ -137,25 +144,38 @@ class AddingNewItemScreen extends StatelessWidget {
                         Container(
                           height: 40,
                           decoration: BoxDecoration(
-                            color: defaultColor,
+                            color: Theme.of(context).inputDecorationTheme.fillColor,
                           ),
-                          child: Row(children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 7),
-                              child: Text(
-                                'Add New Item',
-                                style: TextStyle(color: textColor),
+                          child: Row(
+                              children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    underline: SizedBox(),
+                                       value: AppCubit.get(context).dropDownValue,
+                                       icon:  Icon(Icons.keyboard_arrow_down,color: Theme.of(context).iconTheme.color),
+                                       // Array list of items
+                                    isExpanded: true,
+                                       style:  Theme.of(context).textTheme.bodyText1,
+                                       dropdownColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                                       isDense: true,
+                                       items: AppCubit.get(context).items.map((String items) {
+                                         return DropdownMenuItem(
+                                           value: items,
+                                           child: Text(items,style: Theme.of(context).textTheme.bodyText1,),
+                                         );
+                                       }).toList(),
+                                       onChanged: ( newValue) {
+                                         setState(() {
+                                           AppCubit.get(context). dropDownValue = newValue! as String;
+                                         });
+                                       },
+                                     ),
+                                ),
                               ),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.keyboard_arrow_down_outlined,
-                                  color: textColor,
-                                )),
-                          ]),
+                            ),]),
                         ),
                         const SizedBox(
                           height: 15,
@@ -164,8 +184,7 @@ class AddingNewItemScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 7),
                           child: Text(
                             'Item Name',
-                            style: TextStyle(color: textColor, fontSize: 14),
-                          ),
+                            style:Theme.of(context).textTheme.bodyText1),
                         ),
                         const SizedBox(
                           height: 5,
@@ -187,8 +206,7 @@ class AddingNewItemScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 7),
                           child: Text(
                             'Size/Weight',
-                            style: TextStyle(color: textColor, fontSize: 14),
-                          ),
+                            style: Theme.of(context).textTheme.bodyText1),
                         ),
                         const SizedBox(
                           height: 5,
@@ -204,8 +222,7 @@ class AddingNewItemScreen extends StatelessWidget {
                                 vertical: 15, horizontal: 5),
                             child: Text(
                               'Optional',
-                              style: TextStyle(color: textColor, fontSize: 10),
-                            ),
+                              style:Theme.of(context).textTheme.caption),
                           ),
                         ),
                         const SizedBox(
@@ -215,8 +232,7 @@ class AddingNewItemScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 7),
                           child: Text(
                             'Quantity',
-                            style: TextStyle(color: textColor, fontSize: 14),
-                          ),
+                            style: Theme.of(context).textTheme.bodyText1),
                         ),
                         const SizedBox(
                           height: 5,
@@ -232,8 +248,7 @@ class AddingNewItemScreen extends StatelessWidget {
                                 vertical: 15, horizontal: 5),
                             child: Text(
                               'Optional',
-                              style: TextStyle(color: textColor, fontSize: 10),
-                            ),
+                              style: Theme.of(context).textTheme.caption),
                           ),
                         ),
                         const SizedBox(
@@ -247,19 +262,17 @@ class AddingNewItemScreen extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 7),
                               child: Text(
-                                'Cost Price ()',
+                                'Cost Price (\$)',
                                 style:
-                                    TextStyle(color: textColor, fontSize: 14),
-                              ),
+                                Theme.of(context).textTheme.bodyText1),
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 60),
+                                  const EdgeInsets.symmetric(horizontal: 50),
                               child: Text(
-                                'Sale Price ()',
+                                'Sale Price (\$)',
                                 style:
-                                    TextStyle(color: textColor, fontSize: 14),
-                              ),
+                                Theme.of(context).textTheme.bodyText1),
                             ),
                           ],
                         ),
@@ -304,8 +317,7 @@ class AddingNewItemScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 7),
                           child: Text(
                             'Description',
-                            style: TextStyle(color: textColor, fontSize: 14),
-                          ),
+                            style: Theme.of(context).textTheme.bodyText1),
                         ),
                         const SizedBox(
                           height: 5,
@@ -321,8 +333,7 @@ class AddingNewItemScreen extends StatelessWidget {
                                 vertical: 15, horizontal: 5),
                             child: Text(
                               'Optional',
-                              style: TextStyle(color: textColor, fontSize: 10),
-                            ),
+                              style: Theme.of(context).textTheme.caption),
                           ),
                         ),
                         const SizedBox(
@@ -332,8 +343,7 @@ class AddingNewItemScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 7),
                           child: Text(
                             'UPC Code',
-                            style: TextStyle(color: textColor, fontSize: 14),
-                          ),
+                            style: Theme.of(context).textTheme.bodyText1),
                         ),
                         const SizedBox(
                           height: 5,
@@ -353,9 +363,7 @@ class AddingNewItemScreen extends StatelessWidget {
                                       vertical: 15, horizontal: 5),
                                   child: Text(
                                     'Optional',
-                                    style: TextStyle(
-                                        color: textColor, fontSize: 10),
-                                  ),
+                                    style:Theme.of(context).textTheme.caption),
                                 ),
                               ),
                             ),
@@ -367,14 +375,14 @@ class AddingNewItemScreen extends StatelessWidget {
                               child: Container(
                                 height: 50,
                                 decoration: BoxDecoration(
-                                  color: defaultColor,
+                                  color: Theme.of(context).inputDecorationTheme.fillColor,
                                 ),
                                 child: IconButton(
                                   onPressed: () {
                                     navigateTo(context, const ScanScreen());
                                   },
-                                  icon: const Icon(
-                                      Icons.qr_code_scanner_outlined),
+                                  icon:  Icon(
+                                      Icons.qr_code_scanner_outlined,color:Theme.of(context).iconTheme.color ,),
                                 ),
                               ),
                             ),
@@ -385,9 +393,7 @@ class AddingNewItemScreen extends StatelessWidget {
                         ),
                         Text(
                           'Enter UPC Code or tap the scan button holding your device over a Barcode or QR to get UPC Code',
-                          style: TextStyle(
-                              color: textColor.withOpacity(0.7), fontSize: 14),
-                        ),
+                          style: Theme.of(context).textTheme.caption),
                         const SizedBox(
                           height: 15,
                         ),
@@ -411,12 +417,13 @@ class AddingNewItemScreen extends StatelessWidget {
 
                                 }
                               },
-                              color: Colors.deepOrangeAccent,
+                              color:Theme.of(context).primaryColor,
                               child: Text(
                                 'SAVE',
-                                style: TextStyle(color: textColor),
-                              ),
-                            )),
+                                style: Theme.of(context).textTheme.bodyText1),
+
+                            ),
+                        ),
                       ],
                     ),
                   ),

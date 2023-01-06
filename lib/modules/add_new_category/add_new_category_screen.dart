@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:work/core/components/default_form_field/defaultt_form_field_component.dart';
+import '../../core/components/widgets/default_form_field/defaultt_form_field_component.dart';
 import '../../core/constatns/colors.dart';
-import '../../core/constatns/constant.dart';
 import '../../layout/cubit/app_cubit.dart';
 import '../../layout/cubit/app_state.dart';
 
@@ -23,14 +22,10 @@ class AddNewCategoryScreen extends StatelessWidget {
         builder: (context, state) {
           var cubit = AppCubit.get(context);
           return Scaffold(
-            backgroundColor: screenColor,
-            appBar: AppBar(
-              backgroundColor: defaultColor,
-              elevation: 0.0,
-              iconTheme: IconThemeData(color: textColor),
+             appBar: AppBar(
               title: Text(
                 'Add New Category',
-                style: TextStyle(color: textColor),
+                style: Theme.of(context).appBarTheme.titleTextStyle,
               ),
             ),
             body: Padding(
@@ -43,7 +38,7 @@ class AddNewCategoryScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Category Name',
-                        style: TextStyle(color: textColor, fontSize: 14),
+                        style:  Theme.of(context).textTheme.subtitle1,
                       ),
                       const SizedBox(
                         height: 5,
@@ -62,14 +57,14 @@ class AddNewCategoryScreen extends StatelessWidget {
                       ),
                       Text(
                         ' Color',
-                        style: TextStyle(color: textColor, fontSize: 14),
+                        style:  Theme.of(context).textTheme.subtitle1,
                       ),
                       const SizedBox(
                         height: 5,
                       ),
                       Container(
                         height: 100,
-                        color: defaultColor,
+                        color: Theme.of(context).inputDecorationTheme.fillColor,
                       ),
                       const SizedBox(
                         height: 15,
@@ -94,10 +89,10 @@ class AddNewCategoryScreen extends StatelessWidget {
                                 cubit.closedBottomSheet = false;
                               }
                             },
-                            color: Colors.deepOrangeAccent,
+                            color:  Theme.of(context).primaryColor,
                             child: Text(
                               'SAVE',
-                              style: TextStyle(color: textColor),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                           )),
                     ],

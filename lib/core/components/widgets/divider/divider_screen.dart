@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constatns/colors.dart';
+import '../../../constatns/colors.dart';
 
 class MyDivider extends StatelessWidget {
   const MyDivider({Key? key}) : super(key: key);

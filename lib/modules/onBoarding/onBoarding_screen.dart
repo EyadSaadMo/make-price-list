@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
+
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:work/core/constatns/colors.dart';
 import 'package:work/layout/layout_screen.dart';
@@ -19,9 +19,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: screenColor,
+
       appBar: AppBar(
-        backgroundColor: screenColor,
         elevation: 0.0,
       ),
       body: Column(
@@ -70,7 +69,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         ),
         Text(
           model.text,
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.bodyText1,
         ),
         const SizedBox(
           height: 5,
@@ -80,7 +79,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           child: Text(
             model.body,
             maxLines: 2,
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
         const Expanded(child: SizedBox()),

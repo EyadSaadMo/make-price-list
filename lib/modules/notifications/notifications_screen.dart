@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:work/core/constatns/colors.dart';
-import 'package:work/core/constatns/constant.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
 
@@ -45,11 +43,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       Navigator.pop(context);
     }
     return Scaffold(
-      backgroundColor: screenColor,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: textColor),
-        backgroundColor: defaultColor,
-        title: Text('Notifications',style: TextStyle(color: textColor),),
+        title: Text('Notifications',style: Theme.of(context).appBarTheme.titleTextStyle),
       ),
       // bottomNavigationBar: Container(
       //   height: 70,
@@ -89,7 +84,7 @@ buildItem(Map model){
       color: Colors.blue,
       child: Row(
         children: [
-          Text(model['name'],style: TextStyle(color: Colors.white),),
+          Text(model['name'],style: Theme.of(context).textTheme.bodyText1),
 
         ],
       ),

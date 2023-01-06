@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:work/core/components/routes/routes_screen.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:work/core/components/widgets/custom%20container/custom_container_screen.dart';
+import 'package:work/core/components/widgets/default_form_field/defaultt_form_field_component.dart';
 import 'package:work/core/constatns/colors.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
 import 'package:work/modules/add_new_item/add_new_item_screen.dart';
 import 'package:work/modules/categories/categories_screen.dart';
 import 'package:work/modules/notifications/notifications_screen.dart';
-import '../core/components/drawer/drawer_screen.dart';
-import '../core/constatns/constant.dart';
+import '../core/components/widgets/drawer/drawer_screen.dart';
+import '../core/components/widgets/routes/routes_screen.dart';
 import '../modules/qr_scan/scan_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,14 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 1;
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var itemNameController = TextEditingController();
-  var weightController = TextEditingController();
-  var quantityController = TextEditingController();
-  var costPriceController = TextEditingController();
-  var salePriceController = TextEditingController();
-  var descriptionController = TextEditingController();
-  var codeController = TextEditingController();
   var itemController = TextEditingController();
-  String descriptionText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
           var cubit = AppCubit.get(context);
           return Scaffold(
             key: scaffoldKey,
-            backgroundColor: screenColor,
             appBar: AppBar(
-              iconTheme: IconThemeData(color: textColor),
-              backgroundColor: defaultColor,
               elevation: 0.0,
-              title: Text(
-                'All Item',
-                style: TextStyle(color: textColor),
-              ),
+              title: Text('All Item',
+                  style: Theme.of(context).appBarTheme.titleTextStyle),
               actions: [
                 IconButton(
                   onPressed: () {
@@ -63,32 +52,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else {
                       scaffoldKey.currentState!
                           .showBottomSheet(
-                            (context) =>
-                            Container(
+                            (context) => Container(
                               height: 180,
-                              color: defaultColor,
+                              color: Theme.of(context)
+                                  .bottomSheetTheme
+                                  .backgroundColor,
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'SORT BY',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: textColor.withOpacity(0.4)),
-                                    ),
+                                    Text('SORT BY',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption),
                                     GestureDetector(
                                       child: ListTile(
                                         leading: const Icon(
                                           Icons.sort_by_alpha_outlined,
                                           color: Colors.deepOrangeAccent,
                                         ),
-                                        title: Text(
-                                          'Alphabetically',
-                                          style: TextStyle(
-                                              fontSize: 12, color: textColor),
-                                        ),
+                                        title: Text('Alphabetically',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1),
                                       ),
                                       onTap: () {},
                                     ),
@@ -97,11 +84,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         leading: const Icon(
                                             Icons.price_change_outlined,
                                             color: Colors.deepOrangeAccent),
-                                        title: Text(
-                                          'Sale Price',
-                                          style: TextStyle(
-                                              fontSize: 12, color: textColor),
-                                        ),
+                                        title: Text('Sale Price',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1),
                                       ),
                                       onTap: () {},
                                     ),
@@ -109,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                      )
+                          )
                           .closed
                           .then((value) {
                         cubit.closedBottomSheet = false;
@@ -119,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   icon: Icon(
                     Icons.sort_outlined,
-                    color: textColor,
+                    color: Theme.of(context).iconTheme.color,
                   ),
                 ),
                 IconButton(
@@ -128,84 +114,86 @@ class _HomeScreenState extends State<HomeScreen> {
                       cubit.insertInDatabase(itemName: itemController.text);
                       cubit.getDataFromDatabase2(cubit.database).then((value) {
                         Navigator.pop(context);
-                       cubit.unCategoriesList = value;
+                        cubit.unCategoriesList = value;
                         print(cubit.unCategoriesList);
                       });
 
                       cubit.closedBottomSheet = false;
                     } else {
                       scaffoldKey.currentState!
-                          .showBottomSheet((context) =>
-                          Container(
-                            height: 200,
-                            color: defaultColor,
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Center(
-                                      child: Text('Choose Export File Type',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: textColor,
-                                          ))),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 25),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: GestureDetector(
-                                            child: Container(
-                                              width: 100,
-                                              height: 100,
-                                              decoration: BoxDecoration(
-                                                color: Colors.blue,
+                          .showBottomSheet((context) => Container(
+                                height: 200,
+                                color: Theme.of(context)
+                                    .bottomSheetTheme
+                                    .backgroundColor,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Center(
+                                        child: Text('Choose Export File Type',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 25),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: GestureDetector(
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 100,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.blue,
+                                                  ),
+                                                ),
+                                                onTap: () {},
                                               ),
                                             ),
-                                            onTap: () {},
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 15,
-                                        ),
-                                        Expanded(
-                                          child: GestureDetector(
-                                            child: Container(
-                                              width: 100,
-                                              height: 100,
-                                              decoration: BoxDecoration(
-                                                color: Colors.blue,
+                                            const SizedBox(
+                                              width: 15,
+                                            ),
+                                            Expanded(
+                                              child: GestureDetector(
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 100,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.blue,
+                                                  ),
+                                                ),
+                                                onTap: () {},
                                               ),
                                             ),
-                                            onTap: () {},
-                                          ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Expanded(
-                                      child: Center(
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Expanded(
+                                        child: Center(
                                           child: Text(
                                               'A preview will be display before export',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: textColor
-                                                    .withOpacity(0.4),
-                                              ))))
-                                ],
-                              ),
-                            ),
-                          ))
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ))
                           .closed
                           .then((value) {
                         cubit.closedBottomSheet = false;
@@ -215,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   icon: Icon(
                     Icons.download_for_offline_sharp,
-                    color: textColor,
+                    color: Theme.of(context).iconTheme.color,
                   ),
                 ),
               ],
@@ -227,78 +215,118 @@ class _HomeScreenState extends State<HomeScreen> {
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 15.0,),
+                const SizedBox(
+                  height: 15.0,
+                ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: TextFormField(
-                    cursorColor: defaultColor,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: defaultColor,
-                        hintText: 'Search item or category',
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            navigateTo(context, const ScanScreen());
-                          },
-                          icon: Icon(
-                            Icons.document_scanner_outlined,
-                            color: textColor,
-                          ),
-                        ),
-                        border: InputBorder.none),
+                  child: DefaultFormFieldComponent(
+                    textInputType: TextInputType.text,
+                    controller: itemNameController,
+                    validator: (value) {
+                      return '';
+                    },
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        navigateTo(context, const ScanScreen());
+                      },
+                      icon: Icon(
+                        Icons.document_scanner_outlined,
+                        color: Theme.of(context)
+                            .inputDecorationTheme
+                            .suffixIconColor,
+                      ),
+                    ),
+                    hintText: 'Search item or category',
                   ),
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ListView.separated(
-                        itemBuilder: (ctx, index) =>
-                            GestureDetector(child: buildItem(cubit.categoriesList[index]),onTap: (){
-                              scaffoldKey.currentState!.showBottomSheet((context) => Container(
-                                height: 200,
-                                color: defaultColor,
-                              ));
-                            },),
-                        separatorBuilder: ((ctx, index) =>
-                            Container(
+                        itemBuilder: (ctx, index) => GestureDetector(
+                              child: buildItem(cubit.categoriesList[index]),
+                              onTap: () {
+                                scaffoldKey.currentState!
+                                    .showBottomSheet((context) => Container(
+                                          height: 200,
+                                          color: Theme.of(context)
+                                              .bottomSheetTheme
+                                              .backgroundColor,
+                                        ));
+                              },
+                            ),
+                        separatorBuilder: ((ctx, index) => Container(
                               color: Colors.grey[300],
                               height: 1.0,
                             )),
                         itemCount: cubit.categoriesList.length),
                   ),
                 ),
-                Expanded(child: SizedBox()),
-                Container(color: defaultColor,height: 70,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                    Column(
-                      children: [
-                        IconButton(onPressed: (){navigateTo(context, CategoriesScreen());}, icon: Icon(Icons.dataset_outlined,color: textColor,),),
-                        Text('Categories',style: TextStyle(color: textColor),),
-                      ],
+                Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    CustomContainer(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    navigateTo(context, CategoriesScreen());
+                                  },
+                                  icon: Icon(
+                                    Icons.dataset_outlined,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                ),
+                                Text('Categories',
+                                    style: Theme.of(context).textTheme.bodyText1),
+                                const SizedBox(height: 55,),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    navigateTo(context, NotificationsScreen());
+                                  },
+                                  icon: Icon(
+                                    Icons.notifications,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                ),
+                                Text('Notifications',
+                                    style: Theme.of(context).textTheme.bodyText1),
+                                const SizedBox(height: 55,),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.deepOrangeAccent
-                          ),
-                          child: IconButton(onPressed: (){navigateTo(context, AddingNewItemScreen());}, icon: Icon(Icons.add,color: textColor,),)),
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          navigateTo(context, AddingNewItemScreen());
+                        },
+                        icon: Icon(
+                          Icons.add,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                      ),
                     ),
-                    Column(
-                      children: [
-                        IconButton(onPressed: (){navigateTo(context, NotificationsScreen());}, icon: Icon(Icons.notifications,color: textColor,),),
-                        Text('Notifications',style: TextStyle(color: textColor),),
-                      ],
-                    ),
-                ],),
-                  ),),
+                  ],
+                ),
               ],
             ),
             // body:cubit.screens.elementAt(cubit.currentIndex),
@@ -308,23 +336,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
- Widget buildItem(Map model,) {
+  Widget buildItem(
+    Map model,
+  ) {
     return Container(
       height: 30,
-      color: defaultColor,
+      color: Theme.of(context).bottomSheetTheme.backgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              model['name'],
-              style: TextStyle(color: textColor,fontSize: 18,fontWeight: FontWeight.bold),
-            ),
-            Text(
-              model['salePrice'].toString(),
-              style: TextStyle(color: textColor,fontSize: 18,),
-            ),
+            Text(model['name'], style: Theme.of(context).textTheme.bodyText1),
+            Text(model['salePrice'].toString(),
+                style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    color: AppCubit.get(context).isDark
+                        ? HexColor('808000')
+                        : HexColor('800000'))),
           ],
         ),
       ),

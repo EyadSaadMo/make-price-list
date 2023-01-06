@@ -15,6 +15,15 @@ class AppCubit extends Cubit<AppState> {
   List<Map> categoriesList=[];
   List<Map> unCategoriesList=[];
 
+  bool isDark = false;
+  changeAppMode(){
+    isDark = !isDark;
+    emit(AppChangeThemeModeState());
+  }
+  List<String> items = ['Categories','unCategories','undefined'];
+
+  String dropDownValue='Categories';
+
 
   void createItemsInDataBase()
   {
