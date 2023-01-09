@@ -39,7 +39,7 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
 
   var codeController = TextEditingController();
 bool selectedPhoto = false;
-var oldPhoto = 'assets/images/checkList.jpg';
+var oldPhoto = 'assets/images/checklist.jpg';
 var newPhoto= '';
 File? image;
  Future pickImage(ImageSource source) async {

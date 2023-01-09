@@ -36,7 +36,7 @@ class _MyDrawerState extends State<MyDrawer> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: const Image(
-                        image: AssetImage('assets/images/checkList.jpg'),
+                        image: AssetImage('assets/images/checklist.jpg'),
                       )),
                   const SizedBox(
                     width: 10,

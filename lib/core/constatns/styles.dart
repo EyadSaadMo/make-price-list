@@ -29,6 +29,9 @@ ThemeData lightTheme= ThemeData(
       height: 1.3,
     ),
   ),
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: defaultColor,
+  ),
   // ده بيغير كل حاجه معاك في ال app
    primarySwatch:  Colors.deepOrange,
   //عشان أغير لون ال scaffold في الكل
@@ -38,7 +41,8 @@ ThemeData lightTheme= ThemeData(
     // titleSpacing: 20.0,
     // فيها حاجات تنطبق على ال app bar اللي في ال app كله
     backgroundColor:defaultColor,
-    // elevation: 0.0,
+    elevation: 0.0,
+
     // عاوز بقا أغير ال status bar
     // backwardsCompatibility: false,
     titleTextStyle: TextStyle(
@@ -94,10 +98,10 @@ ThemeData darkTheme= ThemeData(
   appBarTheme: AppBarTheme(
     titleSpacing: 20.0,
     // فيها حاجات تنطبق على ال app bar اللي في ال app كله
-    backgroundColor: HexColor('333739'),
+    backgroundColor: HexColor('454545'),
     actionsIconTheme: IconThemeData(color: Colors.white,),
+    elevation: 0.0,
 
-    // elevation: 0.0,
     // عاوز بقا أغير ال status bar
     // backwardsCompatibility: false,
     // titleTextStyle: TextStyle(
@@ -169,5 +173,8 @@ ThemeData darkTheme= ThemeData(
       height: 1.3,
     ),
 
+  ),
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: HexColor('454545'),
   ),
 );

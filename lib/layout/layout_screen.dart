@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:work/core/components/widgets/custom%20container/custom_container_screen.dart';
 import 'package:work/core/components/widgets/default_form_field/defaultt_form_field_component.dart';
 import 'package:work/core/constatns/colors.dart';
@@ -26,6 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var itemNameController = TextEditingController();
   var itemController = TextEditingController();
+  void shareFileAsPdf()async{
+    var file= await FilePicker.platform.pickFiles();
+    Share.shareFiles([file!.paths[0].toString()]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
           return Scaffold(
             key: scaffoldKey,
             appBar: AppBar(
-              elevation: 0.0,
               title: Text('All Item',
                   style: Theme.of(context).appBarTheme.titleTextStyle),
               actions: [
@@ -157,7 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     color: Colors.blue,
                                                   ),
                                                 ),
-                                                onTap: () {},
+                                                onTap: () {
+                                                  shareFileAsPdf();
+                                                },
                                               ),
                                             ),
                                             const SizedBox(
@@ -248,12 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: buildItem(cubit.categoriesList[index]),
                               onTap: () {
                                 scaffoldKey.currentState!
-                                    .showBottomSheet((context) => Container(
-                                          height: 200,
-                                          color: Theme.of(context)
-                                              .bottomSheetTheme
-                                              .backgroundColor,
-                                        ));
+                                    .showBottomSheet((context) => buildShareItem(),elevation: 0.0);
                               },
                             ),
                         separatorBuilder: ((ctx, index) => Container(
@@ -329,33 +333,142 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            // body:cubit.screens.elementAt(cubit.currentIndex),
           );
         },
       ),
     );
   }
 
-  Widget buildItem(
-    Map model,
-  ) {
+  Widget buildItem(Map model,) {
     return Container(
-      height: 30,
+      height: 80,
       color: Theme.of(context).bottomSheetTheme.backgroundColor,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(model['name'], style: Theme.of(context).textTheme.bodyText1),
-            Text(model['salePrice'].toString(),
-                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    color: AppCubit.get(context).isDark
-                        ? HexColor('808000')
-                        : HexColor('800000'))),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(model['name'], style: Theme.of(context).textTheme.bodyText1),
+                Text(model['salePrice'].toString(),
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        color: AppCubit.get(context).isDark
+                            ? HexColor('808000')
+                            : HexColor('800000'))),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Text('Size/Weight:'' ${model['weight'].toString()}', style: Theme.of(context).textTheme.caption!.copyWith(color:Colors.grey.shade600 )),
+            const SizedBox(height: 5,),
+            Text('Quantity:'' ${model['quantity'].toString()}', style: Theme.of(context).textTheme.caption!.copyWith(color:Colors.grey.shade600 )),
+
+
           ],
         ),
       ),
     );
   }
+
+  Widget buildShareItem(){
+    return Container(
+      height: MediaQuery.of(context).size.height*0.65,
+      color: Theme.of(context)
+          .bottomSheetTheme
+          .backgroundColor,
+      child:Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          height: 40,
+          color:Theme.of(context).primaryColor,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: [
+                IconButton(onPressed: (){}, icon: Image.asset('assets/images/ic_list.png',fit: BoxFit.cover,),),
+                Spacer(),
+                IconButton(onPressed: ()async{
+                  await Share.share('hello eyed');
+                },
+                  icon: Icon(Icons.share_outlined,color:Theme.of(context).iconTheme.color,),),
+                SizedBox(width: 10,),
+                IconButton(onPressed: (){
+                  navigateTo(context, AddingNewItemScreen());
+                }, icon: Icon(Icons.edit_note_outlined,color:Theme.of(context).iconTheme.color,),),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 20,),
+        Container(height: 100,width: 100,decoration: BoxDecoration(
+          color:Theme.of(context).primaryColor,
+          shape: BoxShape.rectangle,
+          border: Border.all(color: Colors.red),
+        ),
+        child: Image(image: AssetImage('assets/images/checkListWomen2.jpg',),fit: BoxFit.cover,),),
+        SizedBox(height: 10,),
+        Text('Salah',style: Theme.of(context).textTheme.bodyText1,),
+        SizedBox(height: 10,),
+        Text('Un Categories',style: Theme.of(context).textTheme.bodyText1!.copyWith(color:Colors.grey.shade600),),
+        SizedBox(height: 10,),
+        Divider(height: 1,color: Theme.of(context).primaryColor,),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child:Column(
+              children: [
+                Row(
+                  children: [
+                    Text('Size/Weight',style: Theme.of(context).textTheme.bodyText1,),
+                    Spacer(),
+                    Text('80',style: Theme.of(context).textTheme.bodyText1!.copyWith(color:Colors.grey.shade600),),
+                  ],
+                ),
+                 SizedBox(height: 10,),
+                 Row(
+                  children: [
+                    Text('Size/Weight',style: Theme.of(context).textTheme.bodyText1,),
+                    Spacer(),
+                    Text('80',style: Theme.of(context).textTheme.bodyText1!.copyWith(color:Colors.grey.shade600),),
+                  ],
+                ),
+                  SizedBox(height: 10,),
+                 Row(
+                  children: [
+                    Text('Size/Weight',style: Theme.of(context).textTheme.bodyText1,),
+                    Spacer(),
+                    Text('80',style: Theme.of(context).textTheme.bodyText1!.copyWith(color:Colors.grey.shade600),),
+                  ],
+                ),
+                SizedBox(height: 10,),
+                 Row(
+                  children: [
+                    Text('Size/Weight',style: Theme.of(context).textTheme.bodyText1,),
+                    Spacer(),
+                    Text('80',style: Theme.of(context).textTheme.bodyText1!.copyWith(color:Colors.grey.shade600),),
+
+                  ],
+                ),
+                SizedBox(height: 10,),
+                 Row(
+                  children: [
+                    Text('Size/Weight',style: Theme.of(context).textTheme.bodyText1,),
+                    Spacer(),
+                    Text('80',style: Theme.of(context).textTheme.bodyText1!.copyWith(color:Colors.grey.shade600),),
+                  ],
+                ),
+                SizedBox(height: 10,),
+                Divider(height: 1,color: Theme.of(context).primaryColor,),
+
+              ],
+            )
+          ),
+        ),
+      ],
+    ));
+  }
+
+
 }

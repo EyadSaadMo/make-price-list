@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../core/constatns/constant.dart';
 import 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
@@ -14,6 +13,7 @@ class AppCubit extends Cubit<AppState> {
    late Database database;
   List<Map> categoriesList=[];
   List<Map> unCategoriesList=[];
+  Uri gmailUrl = Uri.parse('mailto:eyads3514@gmail.com?subject=&body=');
 
   bool isDark = false;
   changeAppMode(){
