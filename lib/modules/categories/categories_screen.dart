@@ -1,16 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:work/core/constatns/colors.dart';
+import 'package:work/core/components/sqflite/queres_screen.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
+import 'package:work/layout/layout_screen.dart';
 
 import '../../core/components/widgets/routes/routes_screen.dart';
 import '../add_new_category/add_new_category_screen.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
    CategoriesScreen({Key? key}) : super(key: key);
 
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> {
+
   var scaffoldKey = GlobalKey<ScaffoldState>();
+
+   SqlDatabase sqlDatabase = SqlDatabase();
+
+   bool isLoading= true;
+
+   List catName = [] ;
+
+   Future readData() async {
+     List<Map> response = await sqlDatabase.read('categories');
+     catName.addAll(response);
+     isLoading = false;
+     if(mounted){
+       setState(() {});
+     }
+   }
+  @override
+  void initState() {
+    readData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +51,7 @@ class CategoriesScreen extends StatelessWidget {
       key: scaffoldKey,
 
       appBar: AppBar(
+        leading: IconButton(onPressed: (){navigateTo(context, const HomeScreen());}, icon: Icon(Icons.arrow_back,color: Theme.of(context).iconTheme.color,),),
         title: Text('Manage categories',style:Theme.of(context).appBarTheme.titleTextStyle),
         actions: [
           IconButton(onPressed: (){
@@ -75,7 +103,7 @@ class CategoriesScreen extends StatelessWidget {
         height: 70,
         color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
       ),
-      body: Column(
+      body: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
@@ -84,9 +112,33 @@ class CategoriesScreen extends StatelessWidget {
                Text('Manage categories',style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 14)),
                const Spacer(),
                Text('NO. OF ITEMS',style: Theme.of(context).textTheme.caption),
+
               ],
             ),
           ),
+           ListView.builder(
+                    itemCount: catName.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (ctx,index){
+                      return SizedBox(
+                        height: 50,
+                        child: Card(
+                          color: Theme.of(context).appBarTheme.backgroundColor,
+                          child: Row(
+                            children: [
+                              Expanded(child: Text('${catName[index]['name']}',style: Theme.of(context).textTheme.bodyText1)),
+                             const Spacer(),
+                              Text('${catName[index]['id']}',style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1!
+                                  .copyWith(color: Colors.grey.shade600,fontSize: 14)),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+           ),
           const SizedBox(height: 15,),
           Container(
             height: 50,
@@ -95,35 +147,32 @@ class CategoriesScreen extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: [
-                  Text('Manage categories',style:Theme.of(context).textTheme.bodyText1),
+                  Text('UnCategories',style:Theme.of(context).textTheme.bodyText1),
                   const Spacer(),
                   Text('2',style:Theme.of(context).textTheme.caption),
                 ],
               ),
             ),
           ),
-          const Expanded(child: SizedBox()),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Center(
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration:  const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.deepOrangeAccent
-                ),
-                child: IconButton(onPressed: (){
-                  navigateTo(context, AddNewCategoryScreen());
-                }, icon: const Icon(Icons.add)),
-              ),
-            ),
-          ),
+
         ],
+      ),
+      floatingActionButton:  Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 130),
+        child: Container(
+          width: 60,
+          height: 60,
+          decoration:  const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.deepOrangeAccent
+          ),
+          child: IconButton(onPressed: (){
+            navigateTo(context, AddNewCategoryScreen());
+          }, icon: const Icon(Icons.add)),
+        ),
       ),
     );
   },
 );
   }
-
 }

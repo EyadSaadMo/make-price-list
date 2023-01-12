@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:work/core/constatns/colors.dart';
+import 'package:work/layout/layout_screen.dart';
 import 'package:work/modules/setting/setting_screen.dart';
 
 import '../routes/routes_screen.dart';
@@ -24,9 +25,6 @@ class _MyDrawerState extends State<MyDrawer> {
           SizedBox(
             height: 120,
             child: DrawerHeader(
-              // decoration: BoxDecoration(
-              //   color: Theme.of(context).drawerTheme.backgroundColor,
-              // ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -68,26 +66,31 @@ class _MyDrawerState extends State<MyDrawer> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.menu_rounded),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                     Text(
-                      'All items',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                    const Expanded(child: SizedBox()),
-                    CircleAvatar(
-                      radius: 10,
-                      backgroundColor: defaultColor,
-                      child: Text(
-                        '2',
-                        style: TextStyle(color: textColor),
+                GestureDetector(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.menu_rounded),
+                      const SizedBox(
+                        width: 10,
                       ),
-                    ),
-                  ],
+                       Text(
+                        'All items',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                      const Expanded(child: SizedBox()),
+                      CircleAvatar(
+                        radius: 10,
+                        backgroundColor: defaultColor,
+                        child: Text(
+                          '2',
+                          style: TextStyle(color: textColor),
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: (){
+                    navigateTo(context, HomeScreen());
+                  },
                 ),
                 const SizedBox(
                   height: 10,
@@ -107,48 +110,57 @@ class _MyDrawerState extends State<MyDrawer> {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  children: [
-                    const Icon(Icons.menu_rounded),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                     Text(
-                      'Uncategorized',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                    const Expanded(child: SizedBox()),
-                    CircleAvatar(
-                      backgroundColor: defaultColor,
-                      radius: 10,
-                      child: Text(
-                        '2',
-                        style: TextStyle(color: textColor),
+                GestureDetector(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.menu_rounded),
+                      const SizedBox(
+                        width: 10,
                       ),
-                    ),
-                  ],
+                       Text(
+                        'Uncategorized',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                      const Expanded(child: SizedBox()),
+                      CircleAvatar(
+                        backgroundColor: defaultColor,
+                        radius: 10,
+                        child: Text(
+                          '2',
+                          style: TextStyle(color: textColor),
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: (){
+                    navigateTo(context, HomeScreen());
+                  },
                 ),
                  // Expanded(child: SizedBox()),
-                  SizedBox(height: 380,),
+                  SizedBox(height: 370,),
                 // Expanded(child: Align(alignment: FractionalOffset.bottomCenter,)),
                 Container(
                   width: double.infinity,
                   height: 1.0,
                   color: textColor,
                 ),
-                Row(
-                  children:  [
-                    IconButton( icon: const Icon(Icons.settings),onPressed: (){
-                      navigateTo(context, SettingScreen());
-                    },),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      'Settings',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                  ],
+                SizedBox(height: 10,),
+                GestureDetector(
+                  child: Row(
+                    children:  [
+                      Icon(Icons.settings),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Settings',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ],
+                  ),
+                  onTap: (){
+                    navigateTo(context, SettingScreen());
+                  },
                 ),
               ],
             ),

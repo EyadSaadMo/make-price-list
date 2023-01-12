@@ -35,6 +35,8 @@ dependencies:
   file_picker:
   store_redirect:
   url_launcher: ^6.1.7
+  flutter_lints: ^2.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -42,7 +44,10 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/images/ic_list.png"
-  flutter_lints: ^2.0.0
+flutter_native_splash:
+  color: "#ffffff"
+  image: "assets/images/ic_list.png"
+  android_gravity: center
 
 flutter:
   uses-material-design: true

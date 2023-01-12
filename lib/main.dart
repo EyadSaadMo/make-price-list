@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:work/core/components/widgets/notification_helper/notification_helper_screen.dart';
 import 'package:work/core/constatns/styles.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
 import 'package:work/layout/layout_screen.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // NotificationHelper().initializationNotification();
   runApp(const MyApp());
 }
 

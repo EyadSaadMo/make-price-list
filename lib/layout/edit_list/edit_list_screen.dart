@@ -15,47 +15,62 @@ import '../../core/components/widgets/default_form_field/defaultt_form_field_com
 import '../../core/components/widgets/routes/routes_screen.dart';
 
 
-class AddingNewItemScreen extends StatefulWidget {
-  const AddingNewItemScreen({Key? key}) : super(key: key);
+class EditListScreen extends StatefulWidget {
+  final String itemName;
+  final String weight;
+  final int quantity;
+  final int costPrice;
+  final int salePrice;
+  final String description;
+  final String code;
+  final int id;
+  const EditListScreen({Key? key, required this.itemName, required this.weight, required this.quantity, required this.costPrice, required this.salePrice, required this.description, required this.code, required this.id}) : super(key: key);
 
   @override
-  State<AddingNewItemScreen> createState() => _AddingNewItemScreenState();
+  State<EditListScreen> createState() => _EditListScreenState();
 }
 
-class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
+class _EditListScreenState extends State<EditListScreen> {
 
   SqlDatabase sqlDatabase = SqlDatabase();
   var scaffoldKey = GlobalKey<ScaffoldState>();
-
   var formKey = GlobalKey<FormState>();
-
   var itemNameController = TextEditingController();
-
   var weightController = TextEditingController();
-
   var quantityController = TextEditingController();
-
   var costPriceController = TextEditingController();
-
   var salePriceController = TextEditingController();
-
   var descriptionController = TextEditingController();
-
   var codeController = TextEditingController();
-bool selectedPhoto = false;
-var oldPhoto = 'assets/images/checklist.jpg';
-File? image;
- Future pickImage(ImageSource source) async {
-   try{
-     final image = await ImagePicker().pickImage(source: source);
-     if(image==null) return;
-     final imageTemporary = File(image.path);
-     setState(() {
-       this.image = imageTemporary;
-     });
-   }on PlatformException catch(error){
-     print('Failed to pick image $error');
-   }
+  var idController = TextEditingController();
+  @override
+  void initState() {
+    itemNameController.text = widget.itemName;
+    weightController.text = widget.weight;
+    quantityController.text = widget.quantity.toString();
+    costPriceController.text = widget.costPrice.toString();
+    salePriceController.text = widget.salePrice.toString();
+    descriptionController.text = widget.description;
+    codeController.text = widget.code;
+    idController.text= widget.id.toString();
+    super.initState();
+  }
+
+
+  bool selectedPhoto = false;
+  var oldPhoto = 'assets/images/checklist.jpg';
+  File? image;
+  Future pickImage(ImageSource source) async {
+    try{
+      final image = await ImagePicker().pickImage(source: source);
+      if(image==null) return;
+      final imageTemporary = File(image.path);
+      setState(() {
+        this.image = imageTemporary;
+      });
+    }on PlatformException catch(error){
+      print('Failed to pick image $error');
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -67,8 +82,8 @@ File? image;
           key: scaffoldKey,
           appBar: AppBar(
             title: Text(
-              'Add New Item',
-              style: Theme.of(context).appBarTheme.titleTextStyle),
+                'Edit Item',
+                style: Theme.of(context).appBarTheme.titleTextStyle),
           ),
           body: ListView(
             children: [
@@ -81,43 +96,43 @@ File? image;
                   } else {
                     scaffoldKey.currentState!
                         .showBottomSheet((context) => Container(
-                              height: 200,
-                              color:  Theme.of(context).bottomSheetTheme.backgroundColor,
-                              child: Column(
-                                children: [
-                                  GestureDetector(
-                                    child:  ListTile(
-                                      leading: Icon(Icons.camera_alt_outlined,color:  Theme.of(context).iconTheme.color,),
-                                      title: Text('Take Photo',style: Theme.of(context).textTheme.bodyText1),
-                                    ),
-                                    onTap: () {
-                                      pickImage(ImageSource.camera);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  GestureDetector(
-                                    child:  ListTile(
-                                      leading: Icon(
-                                          Icons.image_outlined,color:  Theme.of(context).iconTheme.color),
-                                      title: Text('Choose from Gallery',style: Theme.of(context).textTheme.bodyText1),
-                                    ),
-                                    onTap: () {
-                                      pickImage(ImageSource.gallery);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  GestureDetector(
-                                    child:  ListTile(
-                                      leading: Icon(Icons.cancel_outlined,color:  Theme.of(context).iconTheme.color),
-                                      title: Text('Cancel',style: Theme.of(context).textTheme.bodyText1),
-                                    ),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ))
+                      height: 200,
+                      color:  Theme.of(context).bottomSheetTheme.backgroundColor,
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            child:  ListTile(
+                              leading: Icon(Icons.camera_alt_outlined,color:  Theme.of(context).iconTheme.color,),
+                              title: Text('Take Photo',style: Theme.of(context).textTheme.bodyText1),
+                            ),
+                            onTap: () {
+                              pickImage(ImageSource.camera);
+                              Navigator.pop(context);
+                            },
+                          ),
+                          GestureDetector(
+                            child:  ListTile(
+                              leading: Icon(
+                                  Icons.image_outlined,color:  Theme.of(context).iconTheme.color),
+                              title: Text('Choose from Gallery',style: Theme.of(context).textTheme.bodyText1),
+                            ),
+                            onTap: () {
+                              pickImage(ImageSource.gallery);
+                              Navigator.pop(context);
+                            },
+                          ),
+                          GestureDetector(
+                            child:  ListTile(
+                              leading: Icon(Icons.cancel_outlined,color:  Theme.of(context).iconTheme.color),
+                              title: Text('Cancel',style: Theme.of(context).textTheme.bodyText1),
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ))
                         .closed
                         .then((value) {
                       cubit.closedBottomSheet = false;
@@ -136,8 +151,8 @@ File? image;
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
                         child: Text(
-                          'Category',
-                          style: Theme.of(context).textTheme.caption),
+                            'Category',
+                            style: Theme.of(context).textTheme.caption),
                       ),
                       const SizedBox(
                         height: 5,
@@ -149,34 +164,34 @@ File? image;
                         ),
                         child: Row(
                             children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 5),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                  underline: const SizedBox(),
-                                     value: AppCubit.get(context).dropDownValue,
-                                     icon:  Icon(Icons.keyboard_arrow_down,color: Theme.of(context).iconTheme.color),
-                                     // Array list of items
-                                  isExpanded: true,
-                                     style:  Theme.of(context).textTheme.bodyText1,
-                                     dropdownColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-                                     isDense: true,
-                                     items: AppCubit.get(context).items.map((String items) {
-                                       return DropdownMenuItem(
-                                         value: items,
-                                         child: Text(items,style: Theme.of(context).textTheme.bodyText1,),
-                                       );
-                                     }).toList(),
-                                     onChanged: ( newValue) {
-                                       setState(() {
-                                         AppCubit.get(context). dropDownValue = newValue! as String;
-                                       });
-                                     },
-                                   ),
-                              ),
-                            ),
-                          ),]),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      underline: const SizedBox(),
+                                      value: AppCubit.get(context).dropDownValue,
+                                      icon:  Icon(Icons.keyboard_arrow_down,color: Theme.of(context).iconTheme.color),
+                                      // Array list of items
+                                      isExpanded: true,
+                                      style:  Theme.of(context).textTheme.bodyText1,
+                                      dropdownColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                                      isDense: true,
+                                      items: AppCubit.get(context).items.map((String items) {
+                                        return DropdownMenuItem(
+                                          value: items,
+                                          child: Text(items,style: Theme.of(context).textTheme.bodyText1,),
+                                        );
+                                      }).toList(),
+                                      onChanged: ( newValue) {
+                                        setState(() {
+                                          AppCubit.get(context). dropDownValue = newValue! as String;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),]),
                       ),
                       const SizedBox(
                         height: 15,
@@ -184,8 +199,8 @@ File? image;
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
                         child: Text(
-                          'Item Name',
-                          style:Theme.of(context).textTheme.bodyText1),
+                            'Item Name',
+                            style:Theme.of(context).textTheme.bodyText1),
                       ),
                       const SizedBox(
                         height: 5,
@@ -206,14 +221,14 @@ File? image;
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
                         child: Text(
-                          'Size/Weight',
-                          style: Theme.of(context).textTheme.bodyText1),
+                            'Size/Weight',
+                            style: Theme.of(context).textTheme.bodyText1),
                       ),
                       const SizedBox(
                         height: 5,
                       ),
                       DefaultFormFieldComponent(
-                        textInputType: TextInputType.text,
+                        textInputType: TextInputType.number,
                         controller: weightController,
                         validator: (value) {
                           return null;
@@ -222,8 +237,8 @@ File? image;
                           padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 5),
                           child: Text(
-                            'Optional',
-                            style:Theme.of(context).textTheme.caption),
+                              'Optional',
+                              style:Theme.of(context).textTheme.caption),
                         ),
                       ),
                       const SizedBox(
@@ -232,8 +247,8 @@ File? image;
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
                         child: Text(
-                          'Quantity',
-                          style: Theme.of(context).textTheme.bodyText1),
+                            'Quantity',
+                            style: Theme.of(context).textTheme.bodyText1),
                       ),
                       const SizedBox(
                         height: 5,
@@ -248,8 +263,8 @@ File? image;
                           padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 5),
                           child: Text(
-                            'Optional',
-                            style: Theme.of(context).textTheme.caption),
+                              'Optional',
+                              style: Theme.of(context).textTheme.caption),
                         ),
                       ),
                       const SizedBox(
@@ -261,19 +276,19 @@ File? image;
                         children: [
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 7),
+                            const EdgeInsets.symmetric(horizontal: 7),
                             child: Text(
-                              'Cost Price (\$)',
-                              style:
-                              Theme.of(context).textTheme.bodyText1),
+                                'Cost Price (\$)',
+                                style:
+                                Theme.of(context).textTheme.bodyText1),
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 50),
+                            const EdgeInsets.symmetric(horizontal: 50),
                             child: Text(
-                              'Sale Price (\$)',
-                              style:
-                              Theme.of(context).textTheme.bodyText1),
+                                'Sale Price (\$)',
+                                style:
+                                Theme.of(context).textTheme.bodyText1),
                           ),
                         ],
                       ),
@@ -317,8 +332,8 @@ File? image;
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
                         child: Text(
-                          'Description',
-                          style: Theme.of(context).textTheme.bodyText1),
+                            'Description',
+                            style: Theme.of(context).textTheme.bodyText1),
                       ),
                       const SizedBox(
                         height: 5,
@@ -333,8 +348,8 @@ File? image;
                           padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 5),
                           child: Text(
-                            'Optional',
-                            style: Theme.of(context).textTheme.caption),
+                              'Optional',
+                              style: Theme.of(context).textTheme.caption),
                         ),
                       ),
                       const SizedBox(
@@ -343,8 +358,8 @@ File? image;
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
                         child: Text(
-                          'UPC Code',
-                          style: Theme.of(context).textTheme.bodyText1),
+                            'UPC Code',
+                            style: Theme.of(context).textTheme.bodyText1),
                       ),
                       const SizedBox(
                         height: 5,
@@ -363,8 +378,8 @@ File? image;
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 5),
                                 child: Text(
-                                  'Optional',
-                                  style:Theme.of(context).textTheme.caption),
+                                    'Optional',
+                                    style:Theme.of(context).textTheme.caption),
                               ),
                             ),
                           ),
@@ -383,7 +398,7 @@ File? image;
                                   navigateTo(context, const ScanScreen());
                                 },
                                 icon:  Icon(
-                                    Icons.qr_code_scanner_outlined,color:Theme.of(context).iconTheme.color ,),
+                                  Icons.qr_code_scanner_outlined,color:Theme.of(context).iconTheme.color ,),
                               ),
                             ),
                           ),
@@ -393,54 +408,59 @@ File? image;
                         height: 5,
                       ),
                       Text(
-                        'Enter UPC Code or tap the scan button holding your device over a Barcode or QR to get UPC Code',
-                        style: Theme.of(context).textTheme.caption),
+                          'Enter UPC Code or tap the scan button holding your device over a Barcode or QR to get UPC Code',
+                          style: Theme.of(context).textTheme.caption),
                       const SizedBox(
                         height: 15,
                       ),
                       SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: MaterialButton(
-                            onPressed: () async {
-                              if (formKey.currentState!.validate()) {
-                                int response = await sqlDatabase.insert('item', {
-                                  'name':itemNameController.text,
-                                  'weight':weightController.text,
-                                  'quantity':quantityController.text,
-                                  'costPrice':costPriceController.text,
-                                  'salePrice':salePriceController.text,
-                                  'description':descriptionController.text,
-                                  'code':codeController.text,
-                                });
-                              //   int response = await sqlDatabase.insertData(
-                              //       '''
-                              //  INSERT INTO item VALUES(
-                              //  3,
-                              //         "${itemNameController.text}",
-                              //         ${weightController.text},
-                              //         ${quantityController.text},
-                              //         ${costPriceController.text},
-                              //         ${salePriceController.text},
-                              //         "${descriptionController.text}",
-                              //         "${codeController.text}")
+                        width: double.infinity,
+                        height: 50,
+                        child: MaterialButton(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              // int response = await sqlDatabase.updateData(
+                              //     '''
+                              // UPDATE item SET
+                              // name = '${itemNameController.text}',
+                              // weight = '${weightController.text}',
+                              // quantity = '${quantityController.text}',
+                              // costPrice = '${costPriceController.text}',
+                              // salePrice = '${salePriceController.text}',
+                              // description = '${descriptionController.text}',
+                              // code = '${codeController.text}'
+                              //  WHERE id = '${widget.id}'
                               // ''');
-                                print(response);
-                                if (response > 0) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (ctx) => const HomeScreen()), (
-                                      route) => false);
-                                }
+                              int response = await sqlDatabase.update('item',
+                                  {
+                                    'name' : itemNameController.text,
+                                    'weight' : weightController.text,
+                                    'quantity' : quantityController.text,
+                                    'costPrice' : costPriceController.text,
+                                    'salePrice' : salePriceController.text,
+                                    'description' : descriptionController.text,
+                                    'code' :codeController.text
+                                  },
+                                  'id=${widget.id}');
+                              print(response);
+                              if (response > 0) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (ctx) => HomeScreen()), (
+                                    route) => false);
                               }
+                            }
 
-                            },
-                            color:Theme.of(context).primaryColor,
-                            child: Text(
-                              'SAVE',
+                          },
+                          color:Theme.of(context).primaryColor,
+                          child: Text(
+                              'Edit',
                               style: Theme.of(context).textTheme.bodyText1),
 
-                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
                       ),
                     ],
                   ),

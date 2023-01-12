@@ -120,7 +120,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               TextButton(
                 onPressed: () {
                   if (isLast) {
-                    Navigator.push(context,
+                    Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => HomeScreen()));
                   } else {
                     onBoardingController.nextPage(

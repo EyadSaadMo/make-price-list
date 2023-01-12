@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:work/core/components/sqflite/queres_screen.dart';
+import 'package:work/modules/categories/categories_screen.dart';
 import '../../core/components/widgets/default_form_field/defaultt_form_field_component.dart';
-import '../../core/constatns/colors.dart';
-import '../../layout/cubit/app_cubit.dart';
-import '../../layout/cubit/app_state.dart';
 
-class AddNewCategoryScreen extends StatelessWidget {
-  AddNewCategoryScreen({Key? key}) : super(key: key);
 
-  var nameController = TextEditingController();
+class AddNewCategoryScreen extends StatefulWidget {
+  const AddNewCategoryScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AddNewCategoryScreen> createState() => _AddNewCategoryScreenState();
+}
+
+class _AddNewCategoryScreenState extends State<AddNewCategoryScreen> {
+  var catNameController = TextEditingController();
+
   var formKey = GlobalKey<FormState>();
-  var itemController = TextEditingController();
+
+  SqlDatabase sqlDatabase =SqlDatabase();
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AppCubit()..createDataBase(),
-      child: BlocConsumer<AppCubit, AppState>(
-        listener: (context, state) {
-        },
-        builder: (context, state) {
-          var cubit = AppCubit.get(context);
-          return Scaffold(
-             appBar: AppBar(
-              title: Text(
-                'Add New Category',
-                style: Theme.of(context).appBarTheme.titleTextStyle,
-              ),
+    return Scaffold(
+           appBar: AppBar(
+            title: Text(
+              'Add New Category',
+              style: Theme.of(context).appBarTheme.titleTextStyle,
             ),
-            body: Padding(
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Form(
                 key: formKey,
@@ -45,7 +45,7 @@ class AddNewCategoryScreen extends StatelessWidget {
                       ),
                       DefaultFormFieldComponent(
                           textInputType: TextInputType.name,
-                          controller: nameController,
+                          controller: catNameController,
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'required';
@@ -71,38 +71,40 @@ class AddNewCategoryScreen extends StatelessWidget {
                       ),
 
                       SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: MaterialButton(
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                cubit.insertInDatabase(
-                                    itemName: itemController.text);
-                                cubit.getDataFromDatabase2(cubit.database).then((
-                                    value) {
-                                  Navigator.pop(context);
-                                  cubit.unCategoriesList = value;
-                                  print(cubit.unCategoriesList);
-                                });
-
-
-                                cubit.closedBottomSheet = false;
+                        width: double.infinity,
+                        height: 50,
+                        child: MaterialButton(
+                          onPressed: () async {
+                            int response = await sqlDatabase.insert('categories', {
+                              'name':catNameController.text
+                        });
+                              // int response = await sqlDatabase.insertData(
+                              //     '''
+                              //    INSERT INTO categories VALUES("${catNameController.text}")
+                              //   ''');
+                              print(response);
+                              if (response > 0) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (ctx) => CategoriesScreen()), (
+                                    route) => false);
                               }
-                            },
-                            color:  Theme.of(context).primaryColor,
-                            child: Text(
+
+
+                          },
+                          color:Theme.of(context).primaryColor,
+                          child: Text(
                               'SAVE',
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          )),
+                              style: Theme.of(context).textTheme.bodyText1),
+
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
-          );
-        },
-      ),
-    );
+          ),
+        );
   }
 }
