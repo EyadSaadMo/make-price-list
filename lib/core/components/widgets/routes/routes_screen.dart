@@ -6,3 +6,7 @@ void navigateAndFinish(context,widget)=>Navigator.pushAndRemoveUntil(
   MaterialPageRoute(builder: (ctx)=>widget),
   (Route<dynamic> route) => false,
 );
+void navigateReplacement(context,widget)=>Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (ctx)=>widget),
+);

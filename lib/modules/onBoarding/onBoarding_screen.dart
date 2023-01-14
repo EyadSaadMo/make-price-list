@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:work/core/components/widgets/routes/routes_screen.dart';
 import 'package:work/core/constatns/colors.dart';
 import 'package:work/layout/layout_screen.dart';
 import 'package:work/models/onBoardimg_model.dart';
@@ -21,7 +22,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Scaffold(
 
       appBar: AppBar(
-        elevation: 0.0,
+        backgroundColor: screenColor,
       ),
       body: Column(
         children: [
@@ -29,7 +30,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             child: PageView.builder(
               itemBuilder: (context, index) =>
                   buildOnBoardingItem(model[index], context),
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               controller: onBoardingController,
               itemCount: model.length,
               onPageChanged: (int index) {
@@ -79,7 +80,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           child: Text(
             model.body,
             maxLines: 2,
-            style: Theme.of(context).textTheme.caption,
+            style: Theme.of(context).textTheme.bodyText2,
           ),
         ),
         const Expanded(child: SizedBox()),
@@ -90,15 +91,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      (MaterialPageRoute(
-                          builder: (ctx) =>  HomeScreen())));
+                 navigateAndFinish(context, const HomeScreen());
                 },
-                child: const Text('Skip'),
-                style: TextButton.styleFrom(
-                  primary: Colors.black, // Text Color
-                ),
+                child:  Text('Skip',style: Theme.of(context).textTheme.bodyText1,),
               ),
 
               Row(
@@ -107,8 +102,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     controller: onBoardingController,
                     count: 3,
                     effect:  ExpandingDotsEffect(
-                      dotColor: screenColor,
-                      activeDotColor: Colors.black,
+                      dotColor: textColor,
+                      activeDotColor:Theme.of(context).primaryColor,
                       dotHeight: 10,
                       dotWidth: 10,
                       expansionFactor: 4,
@@ -120,18 +115,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               TextButton(
                 onPressed: () {
                   if (isLast) {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                   navigateAndFinish(context,const HomeScreen());
                   } else {
                     onBoardingController.nextPage(
                         duration: const Duration(microseconds: 3),
                         curve: Curves.fastLinearToSlowEaseIn);
                   }
                 },
-                child: const Text('Next'),
-                style: TextButton.styleFrom(
-                  primary: Colors.black, // Text Color
-                ),
+                child:  Text('Next',style: Theme.of(context).textTheme.bodyText1,),
               ),
             ],
           ),

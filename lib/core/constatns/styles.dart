@@ -18,7 +18,7 @@ ThemeData lightTheme= ThemeData(
       color: textColor,
       height: 1.3,
     ),
-    bodyText2: TextStyle(
+    bodyText2: const TextStyle(
       color: Colors.deepOrangeAccent,
       fontSize: 18.0,
       fontWeight: FontWeight.w600,
@@ -26,7 +26,7 @@ ThemeData lightTheme= ThemeData(
     subtitle1: TextStyle(
       fontSize: 14.0,
       color: textColor,
-      height: 1.3,
+      height: 1,
     ),
   ),
   snackBarTheme: SnackBarThemeData(
@@ -54,7 +54,7 @@ ThemeData lightTheme= ThemeData(
     iconTheme: IconThemeData(
       color: textColor,),
     // عملته false عشان اعرف اتحكم في ال status bar
-    systemOverlayStyle: SystemUiOverlayStyle(
+    systemOverlayStyle: const SystemUiOverlayStyle(
       statusBarColor: Colors.white,
       statusBarIconBrightness: Brightness.dark,
     ),
@@ -131,7 +131,7 @@ ThemeData darkTheme= ThemeData(
     backgroundColor: HexColor('333739'),
   ),
   bottomSheetTheme: BottomSheetThemeData(backgroundColor:HexColor('333739') ),
-  textTheme: TextTheme(
+  textTheme: const TextTheme(
     bodyText1: TextStyle(
       fontSize: 18.0,
       fontWeight: FontWeight.w600,
@@ -152,7 +152,7 @@ ThemeData darkTheme= ThemeData(
       fontSize: 14.0,
       fontWeight: FontWeight.w600,
       color: Colors.white,
-      height: 1.3,
+      height: 1,
     ),
   ),
   drawerTheme: DrawerThemeData(

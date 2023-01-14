@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:work/core/components/barcode_scan/barcode_scan_screen.dart';
 import 'package:work/core/constatns/styles.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
 import 'package:work/layout/layout_screen.dart';
+import 'package:work/modules/onBoarding/onBoarding_screen.dart';
+import 'package:work/modules/qr_scan/scan_screen.dart';
 
 
 void main() async {
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode:
                 AppCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
-            home: HomeScreen(),
+            home: const HomeScreen(),
             debugShowCheckedModeBanner: false,
           );
         },

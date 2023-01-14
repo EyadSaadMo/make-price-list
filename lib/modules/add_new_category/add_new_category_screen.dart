@@ -69,7 +69,6 @@ class _AddNewCategoryScreenState extends State<AddNewCategoryScreen> {
                       const SizedBox(
                         height: 15,
                       ),
-
                       SizedBox(
                         width: double.infinity,
                         height: 50,

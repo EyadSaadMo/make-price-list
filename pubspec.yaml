@@ -22,6 +22,7 @@ dependencies:
   hexcolor:
   curved_nav_bar:
   qr_code_scanner: ^1.0.1
+  flutter_barcode_scanner: ^2.0.0
   image_picker: ^0.8.6
   camera:
   sqflite:

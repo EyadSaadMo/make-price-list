@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:work/core/components/barcode_scan/barcode_scan_screen.dart';
 import 'package:work/core/components/widgets/custom%20container/custom_container_screen.dart';
 import 'package:work/core/components/widgets/default_form_field/defaultt_form_field_component.dart';
 import 'package:work/core/constatns/colors.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
-import 'package:work/layout/edit_list/edit_list_screen.dart';
 import 'package:work/modules/add_new_item/add_new_item_screen.dart';
 import 'package:work/modules/categories/categories_screen.dart';
 import 'package:work/modules/notifications/notifications_screen.dart';
 import '../core/components/sqflite/queres_screen.dart';
 import '../core/components/widgets/drawer/drawer_screen.dart';
 import '../core/components/widgets/routes/routes_screen.dart';
-import '../modules/qr_scan/scan_screen.dart';
+import '../modules/edit_list/edit_list_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -27,10 +28,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final drawerKey = GlobalKey<ScaffoldState>();
-  int currentIndex = 1;
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var itemNameController = TextEditingController();
-  var itemController = TextEditingController();
 
   void shareFileAsPdf() async {
     var file = await FilePicker.platform.pickFiles();
@@ -47,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Map> response = await sqlDatabase.read('item');
     newItem.addAll(response);
     isLoading = false;
-    if(this.mounted){
+    if(mounted){
       setState(() {});
     }
   }
@@ -248,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   suffixIcon: IconButton(
                     onPressed: () {
-                      navigateTo(context, const ScanScreen());
+                      navigateTo(context, const BarCodeScannerScreen());
                     },
                     icon: Icon(
                       Icons.document_scanner_outlined,
@@ -266,39 +265,50 @@ class _HomeScreenState extends State<HomeScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (ctx, index) {
                             return InkWell(
-                              child: Card(
-                                color: Theme.of(context).appBarTheme.backgroundColor,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ListTile(
-                                        title: Text(
-                                            '${newItem[index]['name']}',style: Theme.of(context).textTheme.bodyText1),
-                                      subtitle: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(height: 10,),
-                                            Text(
-                                                'Size/Weight: ${newItem[index]['weight']}',style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1!
-                                                .copyWith(color: Colors.grey.shade600,fontSize: 14)),
-                                            const SizedBox(height: 10,),
-                                            Text(
-                                                'Quantity : ${newItem[index]['quantity']}',style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1!
-                                                .copyWith(color: Colors.grey.shade600,fontSize: 14)),
-                                          ],
-                                        ),
-                                        trailing: Text(
-                                            '${newItem[index]['salePrice']}\$',style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                            color: AppCubit.get(context).isDark
-                                                ? HexColor('808000')
-                                                : HexColor('800000')),
-                                        ),
-                                    ),
-                                  ],
+                              child: Dismissible(
+                                key:Key(newItem[index]['id'].toString()),
+                                background: Container(color: Colors.red ,child: ListTile(
+                                  title: Text(newItem[index]['id'].toString()),
+                                ),),
+                                onDismissed: (direction){
+                                 setState(() {
+                                   sqlDatabase.delete('item', 'id = ${newItem[index]['id']}');
+                                 });
+                                },
+                                child: Card(
+                                  color: Theme.of(context).appBarTheme.backgroundColor,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      ListTile(
+                                          title: Text(
+                                              '${newItem[index]['name']}',style: Theme.of(context).textTheme.bodyText1),
+                                        subtitle: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 10,),
+                                              Text(
+                                                  'Size/Weight: ${newItem[index]['weight']}',style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1!
+                                                  .copyWith(color: Colors.grey.shade600,fontSize: 14)),
+                                              const SizedBox(height: 10,),
+                                              Text(
+                                                  'Quantity : ${newItem[index]['quantity']}',style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1!
+                                                  .copyWith(color: Colors.grey.shade600,fontSize: 14)),
+                                            ],
+                                          ),
+                                          trailing: Text(
+                                              '${newItem[index]['salePrice']}\$',style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                              color: AppCubit.get(context).isDark
+                                                  ? HexColor('808000')
+                                                  : HexColor('800000')),
+                                          ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               onTap: () {
@@ -340,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       onPressed: () {
                                                         Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>EditListScreen(
                                                             itemName: newItem[index]['name'],
-                                                            weight:  newItem[index]['weight'].toString(),
+                                                            weight:  newItem[index]['weight'],
                                                             quantity:  newItem[index]['quantity'],
                                                             costPrice:  newItem[index]['costPrice'],
                                                             salePrice:  newItem[index]['salePrice'],

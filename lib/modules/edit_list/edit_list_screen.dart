@@ -9,8 +9,8 @@ import 'package:work/core/components/sqflite/queres_screen.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
 import 'package:work/layout/layout_screen.dart';
-import 'package:work/modules/qr_scan/scan_screen.dart';
 
+import '../../core/components/barcode_scan/barcode_scan_screen.dart';
 import '../../core/components/widgets/default_form_field/defaultt_form_field_component.dart';
 import '../../core/components/widgets/routes/routes_screen.dart';
 
@@ -31,8 +31,7 @@ class EditListScreen extends StatefulWidget {
 }
 
 class _EditListScreenState extends State<EditListScreen> {
-
-  SqlDatabase sqlDatabase = SqlDatabase();
+SqlDatabase sqlDatabase = SqlDatabase();
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
   var itemNameController = TextEditingController();
@@ -395,7 +394,7 @@ class _EditListScreenState extends State<EditListScreen> {
                               ),
                               child: IconButton(
                                 onPressed: () {
-                                  navigateTo(context, const ScanScreen());
+                                  navigateTo(context, const BarCodeScannerScreen());
                                 },
                                 icon:  Icon(
                                   Icons.qr_code_scanner_outlined,color:Theme.of(context).iconTheme.color ,),
@@ -444,10 +443,7 @@ class _EditListScreenState extends State<EditListScreen> {
                                   'id=${widget.id}');
                               print(response);
                               if (response > 0) {
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (ctx) => HomeScreen()), (
-                                    route) => false);
+                                navigateAndFinish(context, HomeScreen());
                               }
                             }
 
@@ -462,6 +458,27 @@ class _EditListScreenState extends State<EditListScreen> {
                       const SizedBox(
                         height: 10,
                       ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: MaterialButton(
+                          onPressed: () async {
+                            int response = await sqlDatabase.delete('categories','id = ${widget.id}');
+                            print(response);
+                            if (response > 0) {
+                              navigateAndFinish(context, const HomeScreen());
+                            }
+
+
+                          },
+                          color:Theme.of(context).primaryColor,
+                          child: Text(
+                              'DELETE',
+                              style: Theme.of(context).textTheme.bodyText1),
+
+                        ),
+                      ),
+
                     ],
                   ),
                 ),

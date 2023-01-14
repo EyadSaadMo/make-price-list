@@ -64,7 +64,7 @@ class SqlDatabase {
     int  response = await  myDb!.update(table, values,where: myWhere);
     return response ;
   }
-  delete(String table,Map<String, Object?> values,String? myWhere) async {
+  delete(String table,String? myWhere) async {
     Database? myDb = await db ;
     int  response = await  myDb!.delete(table,where: myWhere);
     return response ;

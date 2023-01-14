@@ -4,6 +4,7 @@ import 'package:work/core/components/sqflite/queres_screen.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
 import 'package:work/layout/layout_screen.dart';
+import 'package:work/modules/edit_categories/edit_categories_screen.dart';
 
 import '../../core/components/widgets/routes/routes_screen.dart';
 import '../add_new_category/add_new_category_screen.dart';
@@ -121,39 +122,55 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (ctx,index){
-                      return SizedBox(
-                        height: 50,
-                        child: Card(
-                          color: Theme.of(context).appBarTheme.backgroundColor,
-                          child: Row(
-                            children: [
-                              Expanded(child: Text('${catName[index]['name']}',style: Theme.of(context).textTheme.bodyText1)),
-                             const Spacer(),
-                              Text('${catName[index]['id']}',style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(color: Colors.grey.shade600,fontSize: 14)),
-                            ],
+                      return InkWell(
+                        child: SizedBox(
+                          height: 50,
+                          child: Card(
+                            color: Theme.of(context).appBarTheme.backgroundColor,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                children: [
+                                  Expanded(child: Text('${catName[index]['name']}',style: Theme.of(context).textTheme.bodyText1)),
+                                 const Spacer(),
+                                  Text('0',style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .copyWith(color: Colors.grey.shade600,fontSize: 14)),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
+                        onTap: (){
+                          navigateAndFinish(context, EditCategoriesScreen(
+                              itemName: catName[index]['name'],
+                              id: catName[index]['id']));
+                        },
                       );
+
                     },
+
            ),
           const SizedBox(height: 15,),
           Container(
             height: 50,
             color:Theme.of(context).inputDecorationTheme.fillColor,
             child:  Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
                   Text('UnCategories',style:Theme.of(context).textTheme.bodyText1),
                   const Spacer(),
-                  Text('2',style:Theme.of(context).textTheme.caption),
+                  Text('4',style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: Colors.grey.shade600,fontSize: 14)),
                 ],
               ),
             ),
           ),
+
 
         ],
       ),
@@ -167,7 +184,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               color: Colors.deepOrangeAccent
           ),
           child: IconButton(onPressed: (){
-            navigateTo(context, AddNewCategoryScreen());
+            navigateTo(context, const AddNewCategoryScreen());
           }, icon: const Icon(Icons.add)),
         ),
       ),

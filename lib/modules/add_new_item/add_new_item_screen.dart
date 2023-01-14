@@ -11,6 +11,7 @@ import 'package:work/layout/cubit/app_state.dart';
 import 'package:work/layout/layout_screen.dart';
 import 'package:work/modules/qr_scan/scan_screen.dart';
 
+import '../../core/components/barcode_scan/barcode_scan_screen.dart';
 import '../../core/components/widgets/default_form_field/defaultt_form_field_component.dart';
 import '../../core/components/widgets/routes/routes_screen.dart';
 
@@ -380,7 +381,7 @@ File? image;
                               ),
                               child: IconButton(
                                 onPressed: () {
-                                  navigateTo(context, const ScanScreen());
+                                  navigateTo(context, const BarCodeScannerScreen());
                                 },
                                 icon:  Icon(
                                     Icons.qr_code_scanner_outlined,color:Theme.of(context).iconTheme.color ,),
@@ -427,10 +428,7 @@ File? image;
                               // ''');
                                 print(response);
                                 if (response > 0) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (ctx) => const HomeScreen()), (
-                                      route) => false);
+                                 navigateAndFinish(context, HomeScreen());
                                 }
                               }
 
