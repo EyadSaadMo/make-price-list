@@ -1,23 +1,48 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
+import '../../core/network/local/cache_helper.dart';
 import 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(AppInitialState());
 
   static AppCubit get(context) => BlocProvider.of(context);
+  int currentIndex=0;
+  List<Color> colors = [
+    const Color(0xff79b473),
+    const Color(0xff70a37f),
+    const Color(0xff41658a),
+    const Color(0xff414073),
+    const Color(0xffcaffd0),
+    const Color(0xffc9e4e7),
+    const Color(0xffb4a0e5),
+    const Color(0xffca3cff),
+    const Color(0xff3e92cc),
+    const Color(0xff2a628f),
+    const Color(0xff18435a),
+  ];
 
   bool closedBottomSheet= false;
    late Database database;
   List<Map> categoriesList=[];
   List<Map> unCategoriesList=[];
   Uri gmailUrl = Uri.parse('mailto:eyads3514@gmail.com?subject=&body=');
-
+  List<String> themeTitle = ['light','dark'];
   bool isDark = false;
-  changeAppMode(){
-    isDark = !isDark;
-    emit(AppChangeThemeModeState());
+  changeAppMode({bool? fromShared}){
+    if(fromShared != null){
+      isDark = fromShared;
+      emit(AppChangeThemeModeState());
+    }
+    else{
+      isDark = !isDark;
+      CacheHelper.saveData(key: 'isDark', value: isDark).then((value) {
+        emit(AppChangeThemeModeState());
+
+      });
+    }
+
   }
   List<String> items = ['Categories','unCategories','undefined'];
 

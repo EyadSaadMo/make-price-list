@@ -10,7 +10,7 @@ import '../../core/components/widgets/routes/routes_screen.dart';
 import '../add_new_category/add_new_category_screen.dart';
 
 class CategoriesScreen extends StatefulWidget {
-   CategoriesScreen({Key? key}) : super(key: key);
+   const CategoriesScreen({Key? key}) : super(key: key);
 
   @override
   State<CategoriesScreen> createState() => _CategoriesScreenState();
@@ -145,7 +145,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         onTap: (){
                           navigateAndFinish(context, EditCategoriesScreen(
                               itemName: catName[index]['name'],
-                              id: catName[index]['id']));
+                              id: catName[index]['id'],
+                          ),);
                         },
                       );
 

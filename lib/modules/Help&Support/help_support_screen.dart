@@ -1,20 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-
-import 'package:work/layout/cubit/app_cubit.dart';
-import 'package:work/layout/cubit/app_state.dart';
-import 'package:work/modules/qr_scan/scan_screen.dart';
 
 import '../../core/components/widgets/default_form_field/defaultt_form_field_component.dart';
-import '../../core/components/widgets/routes/routes_screen.dart';
 
 
 class HelpAndSupportScreen extends StatefulWidget {
-  HelpAndSupportScreen({Key? key}) : super(key: key);
+  const HelpAndSupportScreen({Key? key}) : super(key: key);
 
   @override
   State<HelpAndSupportScreen> createState() => _HelpAndSupportScreenState();
@@ -142,7 +132,7 @@ var scaffoldKey = GlobalKey<ScaffoldMessengerState>();
         );
   }
 void createSnackBar(String message) {
-  final snackBar = new SnackBar(content: new Text(message),
+  final snackBar =  SnackBar(content:  Text(message),
       backgroundColor: Colors.red);
 
   // Find the Scaffold in the Widget tree and use it to show a SnackBar!

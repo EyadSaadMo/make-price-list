@@ -2,11 +2,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 
 class NotificationApi{
-  final AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@drawable/ic_list');
+  final AndroidInitializationSettings initializationSettingsAndroid = const AndroidInitializationSettings('@drawable/ic_list');
   static final notifications = FlutterLocalNotificationsPlugin();
    static final onNotifications = BehaviorSubject<String?>();
   static Future notificationDetails()async{
-    return NotificationDetails(
+    return const NotificationDetails(
       android: AndroidNotificationDetails(
         'channel id','channel name',
         channelDescription: 'hello world',
@@ -17,8 +17,8 @@ class NotificationApi{
     );
   }
   static Future init({bool initScheduled= false})async{
-    final android = AndroidInitializationSettings('@drawable/ic_list');
-    final settings = InitializationSettings(android: android);
+    const android = AndroidInitializationSettings('@drawable/ic_list');
+    const settings = InitializationSettings(android: android);
 
     await notifications.initialize(settings,onDidReceiveNotificationResponse: (payload)async{
       onNotifications.add(payload.toString());

@@ -99,7 +99,7 @@ ThemeData darkTheme= ThemeData(
     titleSpacing: 20.0,
     // فيها حاجات تنطبق على ال app bar اللي في ال app كله
     backgroundColor: HexColor('454545'),
-    actionsIconTheme: IconThemeData(color: Colors.white,),
+    actionsIconTheme: const IconThemeData(color: Colors.white,),
     elevation: 0.0,
 
     // عاوز بقا أغير ال status bar
@@ -112,7 +112,7 @@ ThemeData darkTheme= ThemeData(
     //   color: Colors.white,
     // ),
     // عشان أعدل في لون الحاجات اللي في ال action جوه ال app bar
-    iconTheme: IconThemeData(
+    iconTheme: const IconThemeData(
       color: Colors.white,
     ),
     // عملته false عشان اعرف اتحكم في ال status bar
@@ -158,7 +158,7 @@ ThemeData darkTheme= ThemeData(
   drawerTheme: DrawerThemeData(
     backgroundColor: HexColor('333739'),
   ),
-  iconTheme: IconThemeData(
+  iconTheme: const IconThemeData(
     color: Colors.white,
   ),
   inputDecorationTheme: InputDecorationTheme(
@@ -166,7 +166,7 @@ ThemeData darkTheme= ThemeData(
     fillColor: HexColor('454545'),
     border: InputBorder.none,
     suffixIconColor: Colors.white,
-    hintStyle: TextStyle(
+    hintStyle: const TextStyle(
       fontSize: 14.0,
       fontWeight: FontWeight.w600,
       color: Colors.white,

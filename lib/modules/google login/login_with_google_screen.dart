@@ -6,13 +6,13 @@ class LoginWithGoogleScreen extends StatelessWidget {
   const LoginWithGoogleScreen({Key? key}) : super(key: key);
 
   googleLogin() async {
-    print('google method sign in');
+    // print('google method sign in');
     GoogleSignIn googleSignIn = GoogleSignIn();
     try {
       var result = await googleSignIn.signIn();
-      print(result);
-      print(result?.displayName);
-      print(result?.photoUrl);
+       print(result);
+      // print(result?.displayName);
+      // print(result?.photoUrl);
     } catch (error) {
       print(error);
     }
@@ -54,7 +54,7 @@ class LoginWithGoogleScreen extends StatelessWidget {
                       children: [
                         Expanded(child: Image.asset('assets/images/google.jpg',fit: BoxFit.cover,),),
                         const SizedBox(width: 20,),
-                        Text('Sign in with Google'),
+                        const Text('Sign in with Google'),
                       ],
                     ),
                   ),

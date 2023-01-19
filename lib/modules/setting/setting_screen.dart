@@ -35,14 +35,14 @@ class SettingScreen extends StatelessWidget {
              Text('Account',style:Theme.of(context).textTheme.bodyText2,),
             const SizedBox(height: 25,),
          InkWell(
-           child: SettingItemComponent(text1: 'Sign In ', text2: 'Tap to sign in with your account',),
+           child: const SettingItemComponent(text1: 'Sign In ', text2: 'Tap to sign in with your account',),
              onTap: (){
-             navigateTo(context,LoginWithGoogleScreen() );
+             navigateTo(context,const LoginWithGoogleScreen() );
            },
          ),
              Text('General',style:Theme.of(context).textTheme.bodyText2,),
             const SizedBox(height: 25,),
-          InkWell(child: SettingItemComponent(text1: 'Currency', text2: 'United  States Dollar()'),onTap: (){
+          InkWell(child: const SettingItemComponent(text1: 'Currency', text2: 'United  States Dollar()'),onTap: (){
             showCurrencyPicker(context: context,
                 showFlag: true,
                 showSearchField: true,
@@ -76,10 +76,10 @@ class SettingScreen extends StatelessWidget {
             const MyDivider(),
             const SizedBox(height: 15,),
            InkWell(
-             child: SettingItemComponent(text1: 'Theme', text2: 'Light',),
+             child: SettingItemComponent(text1: 'Theme', text2: cubit.isDark==true?cubit.themeTitle[1]:cubit.themeTitle[0],),
              onTap: ()
              {
-               scaffoldKey.currentState!.showBottomSheet((context) => Container(
+               scaffoldKey.currentState!.showBottomSheet((context) => SizedBox(
                  height: 200,
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,18 +100,33 @@ class SettingScreen extends StatelessWidget {
                              ),
                            ),
                            onTap: (){
-                             cubit.changeAppMode();
-                             Navigator.pop(context);
+                             if(cubit.isDark == true){
+                               Navigator.pop(context);
+                             }else {
+                               cubit.changeAppMode();
+                               Navigator.pop(context);
+                             }
                            },
                          ),
-                         Container(
-                           width: 100,
-                           height: 100,
-                           decoration: BoxDecoration(
-                               color: screenColor,
-                               shape: BoxShape.rectangle
+                         InkWell(
+                           child: Container(
+                             width: 100,
+                             height: 100,
+                             decoration: BoxDecoration(
+                                 color: screenColor,
+                                 shape: BoxShape.rectangle
+                             ),
                            ),
+                           onTap: (){
+                             if(cubit.isDark == false){
+                               Navigator.pop(context);
+                             }else {
+                               cubit.changeAppMode();
+                               Navigator.pop(context);
+                             }
+                           },
                          ),
+
                        ],
                      ),
                    ],
@@ -121,40 +136,40 @@ class SettingScreen extends StatelessWidget {
            ),
              Text('Backup & Restore',style:Theme.of(context).textTheme.bodyText2,),
             const SizedBox(height: 25,),
-           InkWell(child: SettingItemComponent(text1: 'Backup Data', text2: 'Last Backup: Never'),onTap: (){
+           InkWell(child: const SettingItemComponent(text1: 'Backup Data', text2: 'Last Backup: Never'),onTap: (){
              showAlertDialog(text1: 'Cancel', text2: 'sign in ', alertTitle: 'Sign In Required', alertBody: 'you must sign in t use this feature',context: context);
            },),
             const MyDivider(),
             const SizedBox(height: 15,),
-           InkWell(child: SettingItemComponent(text1: 'Restore Data', text2: 'Last Restore: Never'),onTap: (){
+           InkWell(child: const SettingItemComponent(text1: 'Restore Data', text2: 'Last Restore: Never'),onTap: (){
              showAlertDialog(text1: 'Cancel', text2: 'sign in ', alertTitle: 'Sign In Required', alertBody: 'you must sign in t use this feature',context: context);
            },),
             const MyDivider(),
             const SizedBox(height: 15,),
-           InkWell(child: SettingItemComponent(text1: 'Clear All Data', text2: 'Tap to delete all the data'),onTap: (){
+           InkWell(child: const SettingItemComponent(text1: 'Clear All Data', text2: 'Tap to delete all the data'),onTap: (){
              showAlertDialog(text1: 'No', text2: 'yes', alertTitle: 'Confirmation', alertBody: 'Are you sure you wanna clear all the data on this device? this action cannot be undone',context: context);
            },),
              Text('Info',style:Theme.of(context).textTheme.bodyText2,),
             const SizedBox(height: 25,),
-           InkWell(child: SettingItemComponent(text1: 'Help & Support', text2: ' Tap to contact us'),onTap: (){
-             navigateTo(context, HelpAndSupportScreen());
+           InkWell(child: const SettingItemComponent(text1: 'Help & Support', text2: ' Tap to contact us'),onTap: (){
+             navigateTo(context, const HelpAndSupportScreen());
            },),
             const MyDivider(),
             const SizedBox(height: 15,),
-           InkWell(child: SettingItemComponent(text1: 'Rate This App', text2: ' Tap to rate on Google play'),onTap: ()async {
+           InkWell(child: const SettingItemComponent(text1: 'Rate This App', text2: ' Tap to rate on Google play'),onTap: ()async {
              StoreRedirect.redirect(
                androidAppId: 'com.zhiliaoapp.musically'
              );
            },),
             const MyDivider(),
             const SizedBox(height: 15,),
-           InkWell(child: SettingItemComponent(text1: 'Privacy Policy', text2: ' Tap to view'),
+           InkWell(child: const SettingItemComponent(text1: 'Privacy Policy', text2: ' Tap to view'),
            onTap: (){
-             navigateTo(context, RateAppScreen());
+             navigateTo(context, const RateAppScreen());
            },),
             const MyDivider(),
             const SizedBox(height: 15,),
-           SettingItemComponent(text1: 'Version', text2: ' 1.00'),
+           const SettingItemComponent(text1: 'Version', text2: ' 1.00'),
 
           ],
         ),
@@ -177,7 +192,7 @@ class SettingScreen extends StatelessWidget {
     Widget continueButton = TextButton(
       child: Text(text2!.toUpperCase(),style:TextStyle(color:Theme.of(context).primaryColor ) ,),
       onPressed:  () {
-        navigateTo(context, LoginWithGoogleScreen());
+        navigateTo(context, const LoginWithGoogleScreen());
       },
     );
 

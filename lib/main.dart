@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:work/core/components/barcode_scan/barcode_scan_screen.dart';
 import 'package:work/core/constatns/styles.dart';
+import 'package:work/core/network/local/cache_helper.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
-import 'package:work/layout/layout_screen.dart';
 import 'package:work/modules/onBoarding/onBoarding_screen.dart';
-import 'package:work/modules/qr_scan/scan_screen.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+ await CacheHelper.init();
+ bool isDark = CacheHelper.getData(key: 'isDark');
+  runApp(MyApp(isDark,));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+ final bool isDark;
+  const MyApp(this.isDark, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => AppCubit())],
+      providers: [BlocProvider(create: (context) => AppCubit()..changeAppMode(fromShared: isDark))],
       child: BlocConsumer<AppCubit, AppState>(
         listener: (context, state) {
           // TODO: implement listener
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode:
                 AppCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
-            home: const HomeScreen(),
+            home: const OnBoardingScreen(),
             debugShowCheckedModeBanner: false,
           );
         },

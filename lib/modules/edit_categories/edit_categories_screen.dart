@@ -1,14 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:work/core/components/sqflite/queres_screen.dart';
-import 'package:work/core/components/widgets/drawer/drawer_screen.dart';
 import 'package:work/layout/layout_screen.dart';
 
 import 'package:work/modules/categories/categories_screen.dart';
 
 import '../../core/components/widgets/default_form_field/defaultt_form_field_component.dart';
 import '../../core/components/widgets/routes/routes_screen.dart';
+import '../colorPick/color_picker_screen.dart';
 
 
 class EditCategoriesScreen extends StatefulWidget {
@@ -40,7 +38,7 @@ class _EditCategoriesScreenState extends State<EditCategoriesScreen> {
     return  Scaffold(
           key: scaffoldKey,
           appBar: AppBar(
-            leading: IconButton(onPressed: (){navigateTo(context, HomeScreen());}, icon: Icon(Icons.arrow_back)),
+            leading: IconButton(onPressed: (){navigateTo(context, const HomeScreen());}, icon: const Icon(Icons.arrow_back)),
             title: Text(
                 'Edit Categories',
                 style: Theme.of(context).appBarTheme.titleTextStyle),
@@ -73,6 +71,12 @@ class _EditCategoriesScreenState extends State<EditCategoriesScreen> {
                             return '';
                           }),
                       const SizedBox(height: 15,),
+                      Container(
+                        height: 50,
+                        color: Theme.of(context).inputDecorationTheme.fillColor,
+                        child: const ColorListView(),
+                      ),
+                      const SizedBox(height: 15,),
                       SizedBox(
                         width: double.infinity,
                         height: 50,
@@ -85,7 +89,7 @@ class _EditCategoriesScreenState extends State<EditCategoriesScreen> {
                                   'id=${widget.id}');
                               print(response);
                               if (response > 0) {
-                                navigateAndFinish(context, CategoriesScreen());
+                                navigateAndFinish(context, const CategoriesScreen());
                               }
 
                           },

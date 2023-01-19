@@ -10,20 +10,22 @@ import 'package:work/core/components/sqflite/queres_screen.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
 import 'package:work/layout/layout_screen.dart';
+import 'package:work/models/search_model.dart';
 
 import '../../core/components/barcode_scan/barcode_scan_screen.dart';
 import '../../core/components/widgets/default_form_field/defaultt_form_field_component.dart';
 import '../../core/components/widgets/routes/routes_screen.dart';
 
+class EditNewScreen extends StatefulWidget {
+  final SearchTextModel searchTextModel;
 
-class AddingNewItemScreen extends StatefulWidget {
-  const AddingNewItemScreen({Key? key}) : super(key: key);
+  const EditNewScreen({super.key, required this.searchTextModel});
 
   @override
-  State<AddingNewItemScreen> createState() => _AddingNewItemScreenState();
+  State<EditNewScreen> createState() => _EditNewScreenState();
 }
 
-class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
+class _EditNewScreenState extends State<EditNewScreen> {
   String barcode = 'unKnown';
 
   Future<void> scanQR() async {
@@ -49,37 +51,46 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
 
   SqlDatabase sqlDatabase = SqlDatabase();
   var scaffoldKey = GlobalKey<ScaffoldState>();
-
   var formKey = GlobalKey<FormState>();
-
   var itemNameController = TextEditingController();
-
   var weightController = TextEditingController();
-
   var quantityController = TextEditingController();
-
   var costPriceController = TextEditingController();
-
   var salePriceController = TextEditingController();
-
   var descriptionController = TextEditingController();
-
   var codeController = TextEditingController();
+  var idController = TextEditingController();
+
+  @override
+  void initState() {
+    itemNameController.text = widget.searchTextModel.name!;
+    weightController.text = widget.searchTextModel.weight!;
+    quantityController.text = widget.searchTextModel.quantity!.toString();
+    costPriceController.text = widget.searchTextModel.costPrice!.toString();
+    salePriceController.text = widget.searchTextModel.salePrice!.toString();
+    descriptionController.text = widget.searchTextModel.description!;
+    codeController.text = widget.searchTextModel.code!;
+    idController.text = widget.searchTextModel.id!.toString();
+    super.initState();
+  }
+
   bool selectedPhoto = false;
   var oldPhoto = 'assets/images/checklist.jpg';
   File? image;
+
   Future pickImage(ImageSource source) async {
-    try{
+    try {
       final image = await ImagePicker().pickImage(source: source);
-      if(image==null) return;
+      if (image == null) return;
       final imageTemporary = File(image.path);
       setState(() {
         this.image = imageTemporary;
       });
-    }on PlatformException catch(error){
+    } on PlatformException catch (error) {
       print('Failed to pick image $error');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppState>(
@@ -89,14 +100,19 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
         return Scaffold(
           key: scaffoldKey,
           appBar: AppBar(
-            title: Text(
-                'Add New Item',
+            title: Text('Edit Item',
                 style: Theme.of(context).appBarTheme.titleTextStyle),
           ),
           body: ListView(
             children: [
               GestureDetector(
-                child:image != null?Image.file(image!,height: 250,fit: BoxFit.cover,): Image.asset(oldPhoto),
+                child: image != null
+                    ? Image.file(
+                        image!,
+                        height: 250,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(oldPhoto),
                 onTap: () {
                   if (cubit.closedBottomSheet) {
                     Navigator.pop(context);
@@ -104,43 +120,63 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                   } else {
                     scaffoldKey.currentState!
                         .showBottomSheet((context) => Container(
-                      height: 200,
-                      color:  Theme.of(context).bottomSheetTheme.backgroundColor,
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            child:  ListTile(
-                              leading: Icon(Icons.camera_alt_outlined,color:  Theme.of(context).iconTheme.color,),
-                              title: Text('Take Photo',style: Theme.of(context).textTheme.bodyText1),
-                            ),
-                            onTap: () {
-                              pickImage(ImageSource.camera);
-                              Navigator.pop(context);
-                            },
-                          ),
-                          GestureDetector(
-                            child:  ListTile(
-                              leading: Icon(
-                                  Icons.image_outlined,color:  Theme.of(context).iconTheme.color),
-                              title: Text('Choose from Gallery',style: Theme.of(context).textTheme.bodyText1),
-                            ),
-                            onTap: () {
-                              pickImage(ImageSource.gallery);
-                              Navigator.pop(context);
-                            },
-                          ),
-                          GestureDetector(
-                            child:  ListTile(
-                              leading: Icon(Icons.cancel_outlined,color:  Theme.of(context).iconTheme.color),
-                              title: Text('Cancel',style: Theme.of(context).textTheme.bodyText1),
-                            ),
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
-                      ),
-                    ))
+                              height: 200,
+                              color: Theme.of(context)
+                                  .bottomSheetTheme
+                                  .backgroundColor,
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                    child: ListTile(
+                                      leading: Icon(
+                                        Icons.camera_alt_outlined,
+                                        color:
+                                            Theme.of(context).iconTheme.color,
+                                      ),
+                                      title: Text('Take Photo',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1),
+                                    ),
+                                    onTap: () {
+                                      pickImage(ImageSource.camera);
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  GestureDetector(
+                                    child: ListTile(
+                                      leading: Icon(Icons.image_outlined,
+                                          color: Theme.of(context)
+                                              .iconTheme
+                                              .color),
+                                      title: Text('Choose from Gallery',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1),
+                                    ),
+                                    onTap: () {
+                                      pickImage(ImageSource.gallery);
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  GestureDetector(
+                                    child: ListTile(
+                                      leading: Icon(Icons.cancel_outlined,
+                                          color: Theme.of(context)
+                                              .iconTheme
+                                              .color),
+                                      title: Text('Cancel',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1),
+                                    ),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ))
                         .closed
                         .then((value) {
                       cubit.closedBottomSheet = false;
@@ -158,8 +194,7 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
-                        child: Text(
-                            'Category',
+                        child: Text('Category',
                             style: Theme.of(context).textTheme.caption),
                       ),
                       const SizedBox(
@@ -168,47 +203,59 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                       Container(
                         height: 40,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).inputDecorationTheme.fillColor,
+                          color:
+                              Theme.of(context).inputDecorationTheme.fillColor,
                         ),
-                        child: Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton(
-                                      underline: const SizedBox(),
-                                      value: AppCubit.get(context).dropDownValue,
-                                      icon:  Icon(Icons.keyboard_arrow_down,color: Theme.of(context).iconTheme.color),
-                                      // Array list of items
-                                      isExpanded: true,
-                                      style:  Theme.of(context).textTheme.bodyText1,
-                                      dropdownColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-                                      isDense: true,
-                                      items: AppCubit.get(context).items.map((String items) {
-                                        return DropdownMenuItem(
-                                          value: items,
-                                          child: Text(items,style: Theme.of(context).textTheme.bodyText1,),
-                                        );
-                                      }).toList(),
-                                      onChanged: ( newValue) {
-                                        setState(() {
-                                          AppCubit.get(context). dropDownValue = newValue! as String;
-                                        });
-                                      },
-                                    ),
-                                  ),
+                        child: Row(children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  value: AppCubit.get(context).dropDownValue,
+                                  icon: Icon(Icons.keyboard_arrow_down,
+                                      color: Theme.of(context).iconTheme.color),
+                                  // Array list of items
+                                  isExpanded: true,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                  dropdownColor: Theme.of(context)
+                                      .bottomNavigationBarTheme
+                                      .backgroundColor,
+                                  isDense: true,
+                                  items: AppCubit.get(context)
+                                      .items
+                                      .map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(
+                                        items,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      AppCubit.get(context).dropDownValue =
+                                          newValue! as String;
+                                    });
+                                  },
                                 ),
-                              ),]),
+                              ),
+                            ),
+                          ),
+                        ]),
                       ),
                       const SizedBox(
                         height: 15,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
-                        child: Text(
-                            'Item Name',
-                            style:Theme.of(context).textTheme.bodyText1),
+                        child: Text('Item Name',
+                            style: Theme.of(context).textTheme.bodyText1),
                       ),
                       const SizedBox(
                         height: 5,
@@ -228,15 +275,14 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
-                        child: Text(
-                            'Size/Weight',
+                        child: Text('Size/Weight',
                             style: Theme.of(context).textTheme.bodyText1),
                       ),
                       const SizedBox(
                         height: 5,
                       ),
                       DefaultFormFieldComponent(
-                        textInputType: TextInputType.text,
+                        textInputType: TextInputType.number,
                         controller: weightController,
                         validator: (value) {
                           return null;
@@ -244,9 +290,8 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                         suffixIcon: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 5),
-                          child: Text(
-                              'Optional',
-                              style:Theme.of(context).textTheme.caption),
+                          child: Text('Optional',
+                              style: Theme.of(context).textTheme.caption),
                         ),
                       ),
                       const SizedBox(
@@ -254,8 +299,7 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
-                        child: Text(
-                            'Quantity',
+                        child: Text('Quantity',
                             style: Theme.of(context).textTheme.bodyText1),
                       ),
                       const SizedBox(
@@ -270,8 +314,7 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                         suffixIcon: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 5),
-                          child: Text(
-                              'Optional',
+                          child: Text('Optional',
                               style: Theme.of(context).textTheme.caption),
                         ),
                       ),
@@ -283,20 +326,14 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 7),
-                            child: Text(
-                                'Cost Price (\$)',
-                                style:
-                                Theme.of(context).textTheme.bodyText1),
+                            padding: const EdgeInsets.symmetric(horizontal: 7),
+                            child: Text('Cost Price (\$)',
+                                style: Theme.of(context).textTheme.bodyText1),
                           ),
                           Padding(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 50),
-                            child: Text(
-                                'Sale Price (\$)',
-                                style:
-                                Theme.of(context).textTheme.bodyText1),
+                            padding: const EdgeInsets.symmetric(horizontal: 50),
+                            child: Text('Sale Price (\$)',
+                                style: Theme.of(context).textTheme.bodyText1),
                           ),
                         ],
                       ),
@@ -339,8 +376,7 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
-                        child: Text(
-                            'Description',
+                        child: Text('Description',
                             style: Theme.of(context).textTheme.bodyText1),
                       ),
                       const SizedBox(
@@ -355,8 +391,7 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                         suffixIcon: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 5),
-                          child: Text(
-                              'Optional',
+                          child: Text('Optional',
                               style: Theme.of(context).textTheme.caption),
                         ),
                       ),
@@ -365,8 +400,7 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 7),
-                        child: Text(
-                            'UPC Code',
+                        child: Text('UPC Code',
                             style: Theme.of(context).textTheme.bodyText1),
                       ),
                       const SizedBox(
@@ -376,19 +410,12 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                         children: [
                           Expanded(
                             flex: 3,
-                            child:DefaultFormFieldComponent(
+                            child: DefaultFormFieldComponent(
                               textInputType: TextInputType.name,
-                              controller:codeController,
+                              controller: codeController,
                               validator: (value) {
                                 return null;
                               },
-                              suffixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 5),
-                                child: Text(
-                                    'Optional',
-                                    style:Theme.of(context).textTheme.caption),
-                              ),
                             ),
                           ),
                           const SizedBox(
@@ -399,7 +426,9 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                             child: Container(
                               height: 50,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).inputDecorationTheme.fillColor,
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .fillColor,
                               ),
                               child: IconButton(
                                 onPressed: () {
@@ -409,8 +438,12 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                                     });
                                   });
                                 },
-                                icon:  Icon(
-                                  Icons.qr_code_scanner_outlined,color:Theme.of(context).iconTheme.color ,),
+                                icon: Icon(
+                                  Icons.document_scanner_outlined,
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .suffixIconColor,
+                                ),
                               ),
                             ),
                           ),
@@ -431,27 +464,48 @@ class _AddingNewItemScreenState extends State<AddingNewItemScreen> {
                         child: MaterialButton(
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
-                              int response = await sqlDatabase.insert('item', {
-                                'name':itemNameController.text,
-                                'weight':weightController.text,
-                                'quantity':quantityController.text,
-                                'costPrice':costPriceController.text,
-                                'salePrice':salePriceController.text,
-                                'description':descriptionController.text,
-                                'code':codeController.text,
-                              });
+                              int response = await sqlDatabase.update(
+                                  'item',
+                                  {
+                                    'name': itemNameController.text,
+                                    'weight': weightController.text,
+                                    'quantity': quantityController.text,
+                                    'costPrice': costPriceController.text,
+                                    'salePrice': salePriceController.text,
+                                    'description': descriptionController.text,
+                                    'code': codeController.text
+                                  },
+                                  'id=${widget.searchTextModel.id}');
                               print(response);
                               if (response > 0) {
-                                navigateAndFinish(context, const HomeScreen());
+                                navigateAndFinish(context, HomeScreen());
                               }
                             }
-
                           },
-                          color:Theme.of(context).primaryColor,
-                          child: Text(
-                              'SAVE',
+                          color: Theme.of(context).primaryColor,
+                          child: Text('Edit',
                               style: Theme.of(context).textTheme.bodyText1),
-
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: MaterialButton(
+                          onPressed: () async {
+                            int response = await sqlDatabase.delete(
+                                'categories',
+                                'id = ${widget.searchTextModel.id}');
+                            print(response);
+                            if (response > 0) {
+                              navigateAndFinish(context, const HomeScreen());
+                            }
+                          },
+                          color: Theme.of(context).primaryColor,
+                          child: Text('DELETE',
+                              style: Theme.of(context).textTheme.bodyText1),
                         ),
                       ),
                     ],

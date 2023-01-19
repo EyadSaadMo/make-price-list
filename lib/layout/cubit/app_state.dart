@@ -11,6 +11,7 @@ class AppInsertedInDatabaseState extends AppState {}
 class AppInsertedInDatabaseSuccessState extends AppState {}
 class AppGetDatabaseLoadingState extends AppState {}
 class AppGetDatabaseState extends AppState {}
+class AppChangeItemColor extends AppState {}
 
 
 

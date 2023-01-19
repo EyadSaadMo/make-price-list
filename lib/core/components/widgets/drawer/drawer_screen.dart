@@ -7,6 +7,7 @@ import 'package:work/core/constatns/colors.dart';
 import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
 import 'package:work/layout/layout_screen.dart';
+import 'package:work/modules/details/details_screen.dart';
 import 'package:work/modules/setting/setting_screen.dart';
 
 import '../routes/routes_screen.dart';
@@ -19,6 +20,7 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
+  Color color= const Color(0xff79b473);
   SqlDatabase sqlDatabase = SqlDatabase();
   List categories = [];
   bool isLoading= true;
@@ -152,17 +154,21 @@ class _MyDrawerState extends State<MyDrawer> {
                               height: 50,
                               child: Row(
                                 children: [
+                                  Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration:  const BoxDecoration(
+                                      color: Colors.grey,
+                                      shape: BoxShape.rectangle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10,),
                                   Expanded(child: Text('${categories[index]['name']}',style: Theme.of(context).textTheme.bodyText1)),
-                                  const Spacer(),
-                                  // Text('${categories[index]['id']}',style: Theme.of(context)
-                                  //     .textTheme
-                                  //     .bodyText1!
-                                  //     .copyWith(color: Colors.grey.shade600,fontSize: 14)),
                                 ],
                               ),
                             ),
                             onTap: (){
-                              navigateAndFinish(context, const HomeScreen());
+                              navigateAndFinish(context, DetailsScreen(itemName: categories[index]['name']));
                             },
                           ),),
                       const SizedBox(height: 20,),

@@ -12,7 +12,7 @@ class BarCodeScannerScreen extends StatefulWidget {
 }
 
 class BarCodeScannerScreenState extends State<BarCodeScannerScreen> {
-  String _scanBarcode = 'Unknown';
+  String scanBarcode = 'Unknown';
 
   @override
   void initState() {
@@ -31,7 +31,6 @@ class BarCodeScannerScreenState extends State<BarCodeScannerScreen> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
-      print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -42,7 +41,7 @@ class BarCodeScannerScreenState extends State<BarCodeScannerScreen> {
     if (!mounted) return;
 
     setState(() {
-      _scanBarcode = barcodeScanRes;
+      scanBarcode = barcodeScanRes;
     });
   }
 
@@ -102,9 +101,9 @@ class BarCodeScannerScreenState extends State<BarCodeScannerScreen> {
                     //     onPressed: () => startBarcodeScanStream(),
                     //     child: const Text('Start barcode scan stream')),
                     const SizedBox(height: 15,),
-                    Text('Scan result : $_scanBarcode\n',
+                    Text('Scan result : $scanBarcode\n',
                         style: const TextStyle(fontSize: 20)),
-                  ])),
+                  ]),),
         );
       }),
     );

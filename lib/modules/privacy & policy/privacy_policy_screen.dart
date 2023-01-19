@@ -6,7 +6,7 @@ import 'package:work/layout/cubit/app_cubit.dart';
 import 'package:work/layout/cubit/app_state.dart';
 
 class RateAppScreen extends StatelessWidget {
-  RateAppScreen({Key? key}) : super(key: key);
+  const RateAppScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class RateAppScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(
+            title: const Text(
               'Privacy Policy',
             ),
             actions: [
@@ -36,7 +36,7 @@ class RateAppScreen extends StatelessWidget {
                 children: [
                   Text('Privacy Policy',
                       style: TextStyle(color: Theme.of(context).primaryColor)),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   Text(
@@ -100,7 +100,7 @@ class RateAppScreen extends StatelessWidget {
                         children: [
                           TextSpan(
                               text: 'Google Play Services ',
-                              style:TextStyle(color:Colors.blue,fontWeight: FontWeight.bold,fontSize: 18),
+                              style:const TextStyle(color:Colors.blue,fontWeight: FontWeight.bold,fontSize: 18),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   launch('https://policies.google.com/privacy');
@@ -109,7 +109,7 @@ class RateAppScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 15,),
+                  const SizedBox(height: 15,),
                   Text('Log Data',
                       style: TextStyle(color: Theme.of(context).primaryColor)
                   ),
@@ -221,19 +221,19 @@ class RateAppScreen extends StatelessWidget {
                   Text(
                       'If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us at',
                       style: Theme.of(context).textTheme.bodyText1),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Center(
                     child: Material(
                       textStyle:
-                          TextStyle(decoration: TextDecoration.lineThrough),
+                          const TextStyle(decoration: TextDecoration.lineThrough),
                       child: RichText(
                         text: TextSpan(
                           children: [
                             TextSpan(
                                 text: 'eyads3514@gmail.com ',
-                            style:TextStyle(color:Colors.blue,fontWeight: FontWeight.bold,fontSize: 18),
+                            style:const TextStyle(color:Colors.blue,fontWeight: FontWeight.bold,fontSize: 18),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     launch(AppCubit.get(context)

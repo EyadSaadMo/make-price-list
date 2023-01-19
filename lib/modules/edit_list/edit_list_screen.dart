@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:work/core/components/sqflite/queres_screen.dart';
@@ -31,7 +32,30 @@ class EditListScreen extends StatefulWidget {
 }
 
 class _EditListScreenState extends State<EditListScreen> {
-SqlDatabase sqlDatabase = SqlDatabase();
+
+  String barcode = 'unKnown';
+
+  Future<void> scanQR() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      barcode = barcodeScanRes;
+    });
+  }
+  SqlDatabase sqlDatabase = SqlDatabase();
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
   var itemNameController = TextEditingController();
@@ -367,18 +391,26 @@ SqlDatabase sqlDatabase = SqlDatabase();
                         children: [
                           Expanded(
                             flex: 3,
-                            child: DefaultFormFieldComponent(
+                            child:DefaultFormFieldComponent(
                               textInputType: TextInputType.name,
-                              controller: codeController,
+                              controller:codeController,
                               validator: (value) {
                                 return null;
                               },
-                              suffixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 5),
-                                child: Text(
-                                    'Optional',
-                                    style:Theme.of(context).textTheme.caption),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  scanQR().then((val) {
+                                    setState(() {
+                                      codeController.text = barcode;
+                                    });
+                                  });
+                                },
+                                icon: Icon(
+                                  Icons.document_scanner_outlined,
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .suffixIconColor,
+                                ),
                               ),
                             ),
                           ),

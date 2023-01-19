@@ -6,7 +6,7 @@ class CustomContainer extends StatelessWidget {
   final Widget child;
 
   const CustomContainer(
-      {this.color, required this.child, });
+      {super.key, this.color, required this.child, });
 
   @override
   Widget build(BuildContext context) {
